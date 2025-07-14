@@ -687,7 +687,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // --- MOBILE MENU ---
     const toggleMobileMenu = () => {
+        const isOpen = !mobileMenu.classList.contains('hidden');
         mobileMenu.classList.toggle('hidden');
+        hamburgerBtn.setAttribute('aria-expanded', !isOpen);
     };
     hamburgerBtn.addEventListener('click', toggleMobileMenu);
 
@@ -735,6 +737,28 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
     
+    const wrapText = (text, maxWidth) => {
+        if (text.length <= maxWidth) {
+            return text;
+        }
+        const words = text.split(' ');
+        let lines = [];
+        let currentLine = '';
+
+        words.forEach(word => {
+            if ((currentLine + ' ' + word).trim().length > maxWidth && currentLine.length > 0) {
+                lines.push(currentLine);
+                currentLine = word;
+            } else {
+                currentLine = (currentLine + ' ' + word).trim();
+            }
+        });
+        if (currentLine.length > 0) {
+            lines.push(currentLine);
+        }
+        return lines;
+    }
+
     const createChart = () => {
         const chartElement = document.getElementById('competitorChart');
         if (!chartElement) return;
@@ -762,7 +786,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 responsive: true, maintainAspectRatio: false, indexAxis: 'y',
                 scales: {
                     x: { beginAtZero: true, max: 5, grid: { color: gridColor }, ticks: { color: tickColor, stepSize: 1, callback: (v) => ['Lacking', 'Fair', 'Good', '', 'Excellent'][v-1] || '' } },
-                    y: { grid: { color: gridColor }, ticks: { color: tickColor, autoSkip: false, callback: function(v) { const l = this.getLabelForValue(v); return l.length > 20 ? l.match(/.{1,20}/g) : l; } } }
+                    y: { grid: { color: gridColor }, ticks: { color: tickColor, autoSkip: false, callback: function(v) { const l = this.getLabelForValue(v); return wrapText(l, 20); } } }
                 },
                 plugins: {
                     legend: { position: 'bottom', labels: { color: labelColor } },
@@ -891,8 +915,8 @@ document.addEventListener('DOMContentLoaded', function () {
     accessibilityToggle.addEventListener('click', (e) => {
         e.stopPropagation();
         accessibilityDropdown.classList.toggle('hidden');
-        const isExpanded = accessibilityDropdown.classList.contains('hidden');
-        accessibilityToggle.setAttribute('aria-expanded', !isExpanded);
+        const isExpanded = !accessibilityDropdown.classList.contains('hidden');
+        accessibilityToggle.setAttribute('aria-expanded', isExpanded);
     });
     
     document.addEventListener('click', (e) => {
