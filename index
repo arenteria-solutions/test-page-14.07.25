@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Counter Collective | A Strategic Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 50vh;
+        }
+        .nav-link.active {
+            color: #f59e0b;
+            font-weight: 600;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 12px;
+            border-radius: 9999px;
+            background-color: #d4d4d8;
+            border: 2px solid #fafaf9;
+        }
+        .timeline-item.active::before {
+            background-color: #f59e0b;
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800">
+
+<!-- Chosen Palette: Warm Neutrals & Amber -->
+<!-- Application Structure Plan: A narrative, single-page application that guides the user through the core strategic argument. The structure is thematic: 1. The Problem (Pain Points), 2. The Gap (Competitive Analysis), 3. The Solution (UVP & MVP), 4. The Plan (Roadmap & GTM). This story-driven flow is more engaging than a static report or dashboard, making the business case more compelling by building from problem to solution. Key interactions include a dynamic competitor analysis chart, interactive MVP feature cards, and a clickable product roadmap timeline, all designed to make complex information digestible and to encourage exploration. -->
+<!-- Visualization & Content Choices: 
+- Report Info: Grassroots challenges -> Goal: Inform/Empathize -> Viz: Icon-driven cards with tabbed interaction -> Justification: Breaks down dense text into digestible, visually separated pain points. Encourages interaction to reveal information. -> Method: HTML/CSS/JS.
+- Report Info: Competitive Landscape Matrix -> Goal: Compare/Highlight Opportunity -> Viz: Interactive Bar Chart -> Justification: A dynamic chart is far more engaging than a static table. It allows users to actively compare competitor tiers and visually see the 'gap' where The Counter Collective fits. -> Library: Chart.js.
+- Report Info: MVP Feature Set -> Goal: Explain the product -> Viz: Interactive card layout -> Justification: Presents features in a clean, organized way. Hover/click interactions can reveal more detail without cluttering the main view. -> Method: HTML/CSS/JS.
+- Report Info: Product Roadmap -> Goal: Show long-term vision -> Viz: Interactive vertical timeline -> Justification: A classic, intuitive way to present phased development. Clicking phases scrolls to details, linking the timeline directly to the substance of the plan. -> Method: HTML/CSS/JS.
+-->
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <header id="header" class="bg-stone-50/80 backdrop-blur-lg sticky top-0 z-50 transition-all duration-300 shadow-sm">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-2">
+                    <span class="w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center text-white font-bold text-xl">C</span>
+                    <h1 class="text-xl font-bold text-stone-900">The Counter Collective</h1>
+                </div>
+                <nav class="hidden md:flex space-x-6 lg:space-x-8 text-sm font-medium text-stone-600">
+                    <a href="#problem" class="hover:text-amber-600 transition-colors nav-link">The Problem</a>
+                    <a href="#gap" class="hover:text-amber-600 transition-colors nav-link">The Gap</a>
+                    <a href="#solution" class="hover:text-amber-600 transition-colors nav-link">Our Solution</a>
+                    <a href="#plan" class="hover:text-amber-600 transition-colors nav-link">The Plan</a>
+                </nav>
+                <a href="#contact" class="hidden md:inline-block bg-amber-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-amber-600 transition-colors">Get In Touch</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section id="hero" class="py-20 md:py-32 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h1 class="text-4xl md:text-6xl font-bold text-stone-900 leading-tight">A Strategic Plan for Community Action</h1>
+                <p class="mt-4 max-w-3xl mx-auto text-lg md:text-xl text-stone-600">An interactive analysis of the market, the opportunity, and the go-to-market playbook for The Counter Collective—the all-in-one operations hub for grassroots organizations.</p>
+                <div class="mt-8 flex justify-center gap-4">
+                    <a href="#problem" class="bg-amber-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-amber-600 transition-colors shadow-md">Explore the Analysis</a>
+                    <a href="#plan" class="bg-white text-amber-600 border border-amber-500 px-6 py-3 rounded-lg font-semibold hover:bg-amber-50 transition-colors shadow-md">See the Plan</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="problem" class="py-16 md:py-24">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-stone-900">The Grassroots Challenge</h2>
+                    <p class="mt-3 max-w-2xl mx-auto text-lg text-stone-600">Community-led organizations face a unique and compounding set of challenges. To build a successful platform, we must first deeply understand the environment in which they operate.</p>
+                </div>
+                
+                <div class="max-w-4xl mx-auto bg-white p-4 rounded-xl shadow-lg">
+                    <div class="flex justify-center border-b border-stone-200">
+                        <button data-tab="dilemma" class="pain-tab active-tab px-6 py-3 text-sm font-semibold text-stone-800 border-b-2 border-amber-500">The "Do-It-All" Dilemma</button>
+                        <button data-tab="trap" class="pain-tab px-6 py-3 text-sm font-semibold text-stone-500 border-b-2 border-transparent hover:border-stone-300">The Technology Trap</button>
+                    </div>
+                    <div id="pain-content" class="p-6 md:p-8">
+                        <div id="dilemma-content" class="pain-tab-content fade-in">
+                            <div class="grid md:grid-cols-2 gap-8 items-center">
+                                <div>
+                                    <h3 class="text-2xl font-semibold text-stone-900">Operational Overload on Volunteer Leaders</h3>
+                                    <p class="mt-4 text-stone-600">Leaders of small, community-based organizations are the archetypal "doers," driven by passion. This often leads them to take on an unsustainable number of roles—program manager, fundraiser, marketer, and admin clerk—all at once. The core problem isn't just the volume of work, but the cognitive load of constantly switching between disparate tasks. Our primary design principle must be to reduce this load and give back time, their most precious resource.</p>
+                                </div>
+                                <div class="bg-amber-50 p-6 rounded-lg">
+                                    <h4 class="font-semibold text-stone-800">Key Reported Pains:</h4>
+                                    <ul class="mt-3 space-y-3 text-stone-600">
+                                        <li class="flex items-start">
+                                            <span class="mr-3 text-amber-500">➔</span> "Not enough staff for the work"
+                                        </li>
+                                        <li class="flex items-start">
+                                            <span class="mr-3 text-amber-500">➔</span> "Running an inefficient administration office"
+                                        </li>
+                                        <li class="flex items-start">
+                                            <span class="mr-3 text-amber-500">➔</span> Systemic limitations on time, money, and personnel
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                         <div id="trap-content" class="pain-tab-content hidden fade-in">
+                            <div class="grid md:grid-cols-2 gap-8 items-center">
+                                <div>
+                                    <h3 class="text-2xl font-semibold text-stone-900">When "Helpful" Tools Create More Work</h3>
+                                    <p class="mt-4 text-stone-600">To manage complexity, leaders assemble a patchwork of free or low-cost tools: spreadsheets for volunteers, a form builder for donations, social media schedulers, and more. While helpful in isolation, together they create "technology overload." Data becomes siloed, forcing manual reconciliation and creating massive inefficiencies. The intended solution becomes part of the problem, creating a clear opportunity for a truly unified platform.</p>
+                                </div>
+                                <div class="bg-rose-50 p-6 rounded-lg">
+                                    <h4 class="font-semibold text-stone-800">The Fragmentation Effect:</h4>
+                                    <ul class="mt-3 space-y-3 text-stone-600">
+                                        <li class="flex items-start">
+                                            <span class="mr-3 text-rose-500">➔</span> Volunteer lists don't talk to donor lists.
+                                        </li>
+                                        <li class="flex items-start">
+                                            <span class="mr-3 text-rose-500">➔</span> Data silos require manual re-entry.
+                                        </li>
+                                        <li class="flex items-start">
+                                            <span class="mr-3 text-rose-500">➔</span> Overwhelming for non-technical users to manage.
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="gap" class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-stone-900">The Market Gap</h2>
+                    <p class="mt-3 max-w-2xl mx-auto text-lg text-stone-600">The nonprofit tech market is mature, but analysis reveals a significant gap left by existing solutions, which are often too complex, too expensive, or too narrowly focused.</p>
+                </div>
+                
+                <div class="bg-white p-4 sm:p-6 rounded-xl">
+                    <div class="text-center mb-6">
+                        <p class="text-stone-600 mb-4">Interact with the chart to see how competitors stack up against the core needs of a logistics-first organization.</p>
+                        <div id="competitor-controls" class="flex flex-wrap justify-center gap-2">
+                             <button data-tier="all" class="tier-btn active bg-amber-500 text-white px-4 py-2 text-sm font-semibold rounded-full">All Competitors</button>
+                             <button data-tier="crm" class="tier-btn bg-white text-stone-600 border border-stone-300 px-4 py-2 text-sm font-semibold rounded-full">Tier 1: All-in-One CRMs</button>
+                             <button data-tier="volunteer" class="tier-btn bg-white text-stone-600 border border-stone-300 px-4 py-2 text-sm font-semibold rounded-full">Tier 2: Volunteer Specialists</button>
+                             <button data-tier="niche" class="tier-btn bg-white text-stone-600 border border-stone-300 px-4 py-2 text-sm font-semibold rounded-full">Tier 3: Niche Tools</button>
+                        </div>
+                    </div>
+                    <div class="grid lg:grid-cols-5 gap-8 items-center">
+                        <div class="lg:col-span-3">
+                            <div class="chart-container">
+                                <canvas id="competitorChart"></canvas>
+                            </div>
+                        </div>
+                        <div id="competitor-analysis" class="lg:col-span-2 p-6 bg-stone-50 rounded-lg fade-in">
+                            <h3 id="analysis-title" class="text-xl font-semibold text-stone-800">The "Logistics-First" Opportunity</h3>
+                            <p id="analysis-text" class="mt-2 text-stone-600">The landscape is clear: No single platform effectively unifies logistics, volunteer management, and simple fundraising in a package that is affordable and accessible. CRMs are built for fundraising, not operations. Specialized tools perpetuate data silos. This creates the strategic opening for a platform built with operations at its core.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="solution" class="py-16 md:py-24">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-stone-900">Our Solution: The Counter Collective</h2>
+                     <p class="mt-3 max-w-3xl mx-auto text-lg text-stone-600">The "All-in-One Operations Hub for Community Action." We manage your people, your stuff, and your mission—all in one place, no tech wizard required.</p>
+                </div>
+                
+                <div class="grid lg:grid-cols-2 gap-12 items-center">
+                    <div class="space-y-6">
+                        <h3 class="text-2xl font-bold text-stone-800">Core Differentiators</h3>
+                        <div class="bg-white p-6 rounded-lg shadow-sm">
+                            <h4 class="font-semibold text-amber-600">Operational Unification</h4>
+                            <p class="text-stone-600 mt-1">Seamlessly integrate inventory, volunteers, and basic fundraising from the ground up. Not a CRM with a module bolted on.</p>
+                        </div>
+                         <div class="bg-white p-6 rounded-lg shadow-sm">
+                            <h4 class="font-semibold text-amber-600">Radical Simplicity</h4>
+                            <p class="text-stone-600 mt-1">Our competitive advantage is won on user experience, not the length of the feature list. Simple, clean, and intuitive.</p>
+                        </div>
+                         <div class="bg-white p-6 rounded-lg shadow-sm">
+                            <h4 class="font-semibold text-amber-600">Logistics-First Architecture</h4>
+                            <p class="text-stone-600 mt-1">Built around items and people, not financial transactions. This allows us to solve real-world logistical problems in a way CRMs can't.</p>
+                        </div>
+                    </div>
+                    <div>
+                         <h3 class="text-2xl font-bold text-stone-800 mb-6 text-center lg:text-left">The Minimum Viable Product (MVP)</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="mvp-card bg-white p-6 rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer">
+                                <h4 class="font-bold text-stone-800">Volunteer Command Center</h4>
+                                <p class="text-sm text-stone-600 mt-2">Simple scheduling, volunteer database, basic comms, and hour tracking.</p>
+                            </div>
+                             <div class="mvp-card bg-white p-6 rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer">
+                                <h4 class="font-bold text-stone-800">Inventory & Asset Tracker</h4>
+                                <p class="text-sm text-stone-600 mt-2">Item catalog, quantity/location tracking, and critical expiration date alerts.</p>
+                            </div>
+                             <div class="mvp-card bg-white p-6 rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer">
+                                <h4 class="font-bold text-stone-800">Simple Fundraising & Supporter Log</h4>
+                                <p class="text-sm text-stone-600 mt-2">Embeddable donation forms and an integrated supporter log.</p>
+                            </div>
+                             <div class="mvp-card bg-white p-6 rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer">
+                                <h4 class="font-bold text-stone-800">Integrated Records</h4>
+                                <p class="text-sm text-stone-600 mt-2">A 360-degree view linking donor and volunteer profiles automatically.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="plan" class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                 <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold text-stone-900">The Plan: From MVP to Market Leadership</h2>
+                     <p class="mt-3 max-w-2xl mx-auto text-lg text-stone-600">A disciplined, focused approach to product evolution and market entry, designed to build a sustainable and indispensable platform.</p>
+                </div>
+                <div class="grid lg:grid-cols-3 gap-12">
+                    <div class="lg:col-span-1">
+                        <h3 class="text-2xl font-bold text-stone-800 mb-6">Product Roadmap</h3>
+                        <div class="relative border-l-2 border-stone-200 pl-8 space-y-12">
+                            <div id="phase-1" class="timeline-item active">
+                                <h4 class="font-semibold text-amber-600">Phase 1: MVP</h4>
+                                <p class="text-sm text-stone-600">Solve the physical world first: Inventory & Volunteer management.</p>
+                            </div>
+                             <div id="phase-2" class="timeline-item">
+                                <h4 class="font-semibold text-stone-800">Phase 2: Deepen Engagement</h4>
+                                <p class="text-sm text-stone-600">Move from management to insight with advanced reporting, client intake, and grant tracking.</p>
+                            </div>
+                             <div id="phase-3" class="timeline-item">
+                                <h4 class="font-semibold text-stone-800">Phase 3: Build the Ecosystem</h4>
+                                <p class="text-sm text-stone-600">Connect to the world with an API, integrations (QuickBooks, etc.), and a mobile app.</p>
+                            </div>
+                             <div id="phase-4" class="timeline-item">
+                                <h4 class="font-semibold text-stone-800">Future: The AI Opportunity</h4>
+                                <p class="text-sm text-stone-600">Unlock predictive capabilities like inventory forecasting and smart volunteer matching.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-2 bg-stone-50 p-8 rounded-xl">
+                        <h3 class="text-2xl font-bold text-stone-800 mb-6">Go-to-Market: Win Omaha First</h3>
+                        <p class="text-stone-600 mb-6">Instead of a broad national launch, we will concentrate all initial energy on dominating a single, well-understood market: the Omaha nonprofit ecosystem. This hyper-local approach builds credibility and generates powerful case studies for future expansion.</p>
+                        <div class="space-y-4">
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 w-8 h-8 rounded-full bg-amber-500 text-white flex items-center justify-center font-bold">1</div>
+                                <div class="ml-4">
+                                    <h4 class="font-semibold">Launch "Founding Members Program"</h4>
+                                    <p class="text-sm text-stone-600">Offer the platform free for life to the first 10-15 Omaha organizations to seed the platform and generate rapid feedback.</p>
+                                </div>
+                            </div>
+                             <div class="flex items-start">
+                                <div class="flex-shrink-0 w-8 h-8 rounded-full bg-amber-500 text-white flex items-center justify-center font-bold">2</div>
+                                <div class="ml-4">
+                                    <h4 class="font-semibold">Forge Strategic Partnerships</h4>
+                                    <p class="text-sm text-stone-600">Build credibility through endorsements from key community players like the Nonprofit Association of the Midlands (NAM) and Omaha Community Foundation (OCF).</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 w-8 h-8 rounded-full bg-amber-500 text-white flex items-center justify-center font-bold">3</div>
+                                <div class="ml-4">
+                                    <h4 class="font-semibold">Adopt "Freemium for Good" Pricing</h4>
+                                    <p class="text-sm text-stone-600">A genuinely useful free tier lowers the barrier to entry and drives user acquisition, supported by affordable paid tiers for growing organizations.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer id="contact" class="bg-stone-800 text-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="text-center">
+                 <h2 class="text-3xl font-bold">Ready to Build the Future of Community Operations?</h2>
+                 <p class="mt-4 max-w-2xl mx-auto text-stone-300">The opportunity is clear. The plan is actionable. Let's empower the organizations that power our communities.</p>
+                 <div class="mt-8">
+                     <a href="mailto:contact@thecountercollective.com" class="bg-amber-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-amber-600 transition-colors shadow-lg">Contact Us</a>
+                 </div>
+            </div>
+             <div class="mt-16 pt-8 border-t border-stone-700 text-center text-sm text-stone-400">
+                <p>&copy; 2025 The Counter Collective. A Strategic Analysis.</p>
+             </div>
+        </div>
+    </footer>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    
+    const painTabs = document.querySelectorAll('.pain-tab');
+    const painContents = document.querySelectorAll('.pain-tab-content');
+
+    painTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const target = tab.getAttribute('data-tab');
+
+            painTabs.forEach(t => {
+                t.classList.remove('active-tab', 'border-amber-500', 'text-stone-800');
+                t.classList.add('border-transparent', 'text-stone-500');
+            });
+            tab.classList.add('active-tab', 'border-amber-500', 'text-stone-800');
+            tab.classList.remove('border-transparent', 'text-stone-500');
+
+            painContents.forEach(content => {
+                if (content.id === `${target}-content`) {
+                    content.classList.remove('hidden');
+                } else {
+                    content.classList.add('hidden');
+                }
+            });
+        });
+    });
+
+    const competitorData = {
+        labels: ['Inventory & Asset Tracking', 'Core Volunteer Management', 'Basic Fundraising Tools', 'Ease of Use (Non-Tech)'],
+        datasets: [
+            {
+                label: 'The Counter Collective',
+                data: [5, 5, 4, 5],
+                backgroundColor: 'rgba(245, 158, 11, 0.8)', // amber-500
+                borderColor: 'rgba(245, 158, 11, 1)',
+                borderWidth: 1
+            },
+            {
+                label: 'Tier 1: CRMs',
+                data: [1, 4, 5, 4],
+                backgroundColor: 'rgba(120, 113, 108, 0.6)', // stone-500
+                borderColor: 'rgba(120, 113, 108, 1)',
+                borderWidth: 1,
+                hidden: false,
+            },
+            {
+                label: 'Tier 2: Volunteer Specialists',
+                data: [1, 5, 2, 4],
+                backgroundColor: 'rgba(168, 162, 158, 0.6)', // stone-400
+                borderColor: 'rgba(168, 162, 158, 1)',
+                borderWidth: 1,
+                hidden: false,
+            },
+            {
+                label: 'Tier 3: Niche Tools',
+                data: [5, 2, 1, 4],
+                backgroundColor: 'rgba(214, 211, 209, 0.6)', // stone-300
+                borderColor: 'rgba(214, 211, 209, 1)',
+                borderWidth: 1,
+                hidden: false,
+            }
+        ]
+    };
+    
+    const analysisText = {
+        all: {
+            title: "The 'Logistics-First' Opportunity",
+            text: "The landscape is clear: No single platform effectively unifies logistics, volunteer management, and simple fundraising in a package that is affordable and accessible. CRMs are built for fundraising, not operations. Specialized tools perpetuate data silos. This creates the strategic opening for a platform built with operations at its core."
+        },
+        crm: {
+            title: "Weakness of All-in-One CRMs",
+            text: "These powerful platforms are fundamentally fundraising-centric. Their weakness for our target user is a mismatch of focus, complexity, and cost. Operational logistics are not native and require complex, expensive bolt-ons, reintroducing the technology trap."
+        },
+        volunteer: {
+            title: "Weakness of Volunteer Specialists",
+            text: "These tools excel at managing people, but their focus is their limitation. They don't manage the 'stuff'—inventory, physical assets, etc. This forces organizations back into the very problem we aim to solve: using multiple, siloed systems."
+        },
+        niche: {
+            title: "Weakness of Niche Tools",
+            text: "While perfectly tailored for specific problems like food pantry inventory, these tools are often too niche. They typically have limited or non-existent features for volunteer management or fundraising, forcing users to purchase and manage multiple systems."
+        }
+    };
+    
+    const ctx = document.getElementById('competitorChart').getContext('2d');
+    const competitorChart = new Chart(ctx, {
+        type: 'bar',
+        data: competitorData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            indexAxis: 'y',
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    max: 5,
+                    ticks: {
+                       stepSize: 1,
+                       callback: function(value) {
+                           const labels = ['Lacking', 'Fair', 'Good', '', 'Excellent'];
+                           return labels[value-1] || '';
+                       }
+                    }
+                },
+                y: {
+                    ticks: {
+                        autoSkip: false,
+                        callback: function(value, index, values) {
+                            const label = this.getLabelForValue(value);
+                            if (label.length > 20) {
+                                return label.match(/.{1,20}/g);
+                            }
+                            return label;
+                        }
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed.x !== null) {
+                                const scoreMap = { 1: 'Lacking', 2: 'Fair', 3: 'Good', 4: 'Good+', 5: 'Excellent' };
+                                label += `Score ${context.parsed.x} (${scoreMap[context.parsed.x] || ''})`;
+                            }
+                            return label;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    const tierButtons = document.querySelectorAll('.tier-btn');
+    const analysisTitleEl = document.getElementById('analysis-title');
+    const analysisTextEl = document.getElementById('analysis-text');
+    const analysisContainer = document.getElementById('competitor-analysis');
+
+    tierButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const tier = button.dataset.tier;
+
+            tierButtons.forEach(btn => {
+                btn.classList.remove('active', 'bg-amber-500', 'text-white');
+                btn.classList.add('bg-white', 'text-stone-600', 'border', 'border-stone-300');
+            });
+            button.classList.add('active', 'bg-amber-500', 'text-white');
+            button.classList.remove('bg-white', 'text-stone-600', 'border', 'border-stone-300');
+
+            competitorChart.data.datasets.forEach((dataset, index) => {
+                if (index === 0) { // Always show The Counter Collective
+                    dataset.hidden = false;
+                    return;
+                }
+                if (tier === 'all') {
+                    dataset.hidden = false;
+                } else if (tier === 'crm' && dataset.label.includes('CRMs')) {
+                    dataset.hidden = false;
+                } else if (tier === 'volunteer' && dataset.label.includes('Volunteer')) {
+                    dataset.hidden = false;
+                } else if (tier === 'niche' && dataset.label.includes('Niche')) {
+                    dataset.hidden = false;
+                } else {
+                    dataset.hidden = true;
+                }
+            });
+            competitorChart.update();
+            
+            analysisContainer.classList.remove('fade-in');
+            void analysisContainer.offsetWidth; // Trigger reflow
+            analysisContainer.classList.add('fade-in');
+
+            analysisTitleEl.textContent = analysisText[tier].title;
+            analysisTextEl.textContent = analysisText[tier].text;
+        });
+    });
+
+    const sections = document.querySelectorAll('main section[id]');
+    const navLinks = document.querySelectorAll('.nav-link');
+    const timelineItems = document.querySelectorAll('.timeline-item');
+    
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.4
+    };
+
+    const sectionObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.getAttribute('id');
+          navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${id}`) {
+              link.classList.add('active');
+            }
+          });
+          
+          if(id === 'plan') {
+                const roadmapObserver = new IntersectionObserver((roadmapEntries) => {
+                    roadmapEntries.forEach(roadmapEntry => {
+                        if (roadmapEntry.isIntersecting) {
+                            timelineItems.forEach(item => {
+                                item.classList.remove('active');
+                                if(item.id === roadmapEntry.target.id) {
+                                    item.classList.add('active');
+                                }
+                            });
+                        }
+                    });
+                }, { threshold: 0.8 });
+
+                timelineItems.forEach(item => roadmapObserver.observe(item));
+          }
+        }
+      });
+    }, observerOptions);
+
+    sections.forEach(section => {
+      sectionObserver.observe(section);
+    });
+});
+</script>
+
+</body>
+</html>
