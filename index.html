@@ -49,6 +49,29 @@
             --success-border: #38A169;
         }
 
+        .high-contrast {
+            --bg-primary: #000000;
+            --bg-secondary: #000000;
+            --bg-header: rgba(0,0,0,0.8);
+            --text-primary: #ffffff;
+            --text-secondary: #ffff00;
+            --text-inverted: #000000;
+            --border-primary: #ffff00;
+            --border-focus: #ffff00;
+            --brand-gradient: none;
+            --brand-color-start: #ffff00;
+            --brand-color-end: #ffff00;
+            --chart-grid-color: #ffff00;
+            --chart-tick-color: #ffffff;
+            --card-icon-bg: #ffff00;
+            --card-icon-color: #000000;
+            --success-bg: #000000;
+            --success-text: #ffffff;
+            --success-border: #ffff00;
+        }
+        .high-contrast .text-gradient { background: none; -webkit-text-fill-color: var(--text-secondary); }
+        .high-contrast .btn-gradient { background: var(--text-secondary); color: var(--text-inverted); }
+
         body {
             font-family: 'Manrope', sans-serif;
             background-color: var(--bg-primary);
@@ -72,6 +95,27 @@
         
         .page-section { display: none; }
         .page-section.active { display: block; animation: fadeIn 0.5s ease-in-out; }
+
+        #mobile-menu {
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -21px;
+            top: 1rem;
+            width: 14px;
+            height: 14px;
+            border-radius: 9999px;
+            background-color: var(--border-primary);
+            border: 3px solid var(--bg-secondary);
+            transition: all 0.3s ease;
+        }
+        .timeline-item.active::before {
+            background-color: var(--brand-color-start);
+        }
+
     </style>
 </head>
 <body class="bg-primary">
@@ -80,37 +124,69 @@
             <div class="flex justify-between items-center py-4">
                 <a href="#home" class="nav-trigger flex items-center space-x-3">
                     <span class="w-9 h-9 btn-gradient rounded-full flex items-center justify-center text-black font-bold text-xl">C</span>
-                    <h1 class="text-xl font-bold" style="color: var(--text-primary);">The Counter Collective</h1>
+                    <h1 class="text-xl font-bold" style="color: var(--text-primary);" data-translate-key="brand_name">The Counter Collective</h1>
                 </a>
                 <div class="flex items-center">
-                    <nav class="hidden md:flex space-x-6 lg:space-x-8 text-sm font-medium mr-8" style="color: var(--text-secondary);">
-                        <a href="#home" class="nav-link nav-trigger active">Home</a>
-                        <a href="#features" class="nav-link nav-trigger">Features</a>
-                        <a href="#mission" class="nav-link nav-trigger">Our Mission</a>
-                        <a href="#blog" class="nav-link nav-trigger">Blog</a>
-                        <a href="#partners" class="nav-link nav-trigger">Partners</a>
+                    <nav class="hidden md:flex space-x-6 lg:space-x-8 text-sm font-medium mr-4" style="color: var(--text-secondary);">
+                        <a href="#home" class="nav-link nav-trigger active" data-translate-key="nav_home">Home</a>
+                        <a href="#features" class="nav-link nav-trigger" data-translate-key="nav_features">Features</a>
+                        <a href="#roadmap" class="nav-link nav-trigger" data-translate-key="nav_roadmap">Roadmap</a>
+                        <a href="#mission" class="nav-link nav-trigger" data-translate-key="nav_mission">Our Mission</a>
+                        <a href="#partners" class="nav-link nav-trigger" data-translate-key="nav_partners">Partners</a>
                     </nav>
-                    <a href="#waitlist" class="hidden lg:inline-block btn-gradient text-black px-5 py-2 rounded-lg font-semibold hover:opacity-90 transition-opacity text-sm mr-4">Join Waitlist</a>
+                    <a href="#waitlist" class="hidden lg:inline-block btn-gradient text-black px-5 py-2 rounded-lg font-semibold hover:opacity-90 transition-opacity text-sm mr-4" data-translate-key="nav_waitlist_button">Join Waitlist</a>
+                    
+                    <div class="relative" id="accessibility-menu-container">
+                        <button id="accessibility-toggle" class="p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2" style="color: var(--text-secondary); --ring-offset-color: var(--bg-primary); --ring-color: var(--border-focus);">
+                           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                        </button>
+                        <div id="accessibility-dropdown" class="hidden absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1" style="background-color: var(--bg-secondary); border: 1px solid var(--border-primary);">
+                           <div class="px-4 py-2 text-xs" style="color: var(--text-secondary);" data-translate-key="acc_title">Accessibility</div>
+                           <button id="language-toggle" class="w-full text-left px-4 py-2 text-sm" style="color: var(--text-primary);">Español</button>
+                           <div class="flex items-center justify-between px-4 py-2 text-sm" style="color: var(--text-primary);">
+                               <label for="high-contrast-toggle" data-translate-key="acc_contrast">High Contrast</label>
+                               <input type="checkbox" id="high-contrast-toggle" class="form-checkbox h-4 w-4 text-brand" />
+                           </div>
+                        </div>
+                    </div>
+
                     <button id="theme-toggle" class="p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2" style="color: var(--text-secondary); --ring-offset-color: var(--bg-primary); --ring-color: var(--border-focus);">
                         <svg id="theme-icon-sun" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                         <svg id="theme-icon-moon" class="h-5 w-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                    </button>
+
+                    <button id="hamburger-button" class="md:hidden p-2 rounded-md" style="color: var(--text-secondary);">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
                     </button>
                 </div>
             </div>
         </div>
     </header>
 
+    <!-- MOBILE MENU -->
+    <div id="mobile-menu" class="fixed inset-0 z-40 hidden" style="background-color: var(--bg-primary); opacity: 0; visibility: hidden;">
+        <div class="flex flex-col items-center justify-center h-full space-y-8">
+            <a href="#home" class="mobile-nav-link text-2xl font-bold" data-translate-key="nav_home">Home</a>
+            <a href="#features" class="mobile-nav-link text-2xl font-bold" data-translate-key="nav_features">Features</a>
+            <a href="#roadmap" class="mobile-nav-link text-2xl font-bold" data-translate-key="nav_roadmap">Roadmap</a>
+            <a href="#mission" class="mobile-nav-link text-2xl font-bold" data-translate-key="nav_mission">Our Mission</a>
+            <a href="#partners" class="mobile-nav-link text-2xl font-bold" data-translate-key="nav_partners">Partners</a>
+            <a href="#waitlist" class="mobile-nav-link mt-12 btn-gradient text-black px-8 py-4 rounded-lg font-bold text-lg" data-translate-key="nav_waitlist_button">Join Waitlist</a>
+        </div>
+    </div>
+
     <main>
+        <!-- All page sections remain the same -->
         <!-- HOME PAGE -->
         <section id="home" class="page-section active">
             <div id="hero" class="py-20 md:py-32" style="background-color: var(--bg-primary);">
                 <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <h1 class="text-5xl md:text-6xl font-extrabold leading-tight" style="color: var(--text-primary);">
-                        Imagine the Impact, <span class="text-gradient">Effortlessly.</span>
+                    <h1 class="text-5xl md:text-6xl font-extrabold leading-tight" style="color: var(--text-primary);" data-translate-key="hero_title">
+                        Imagine the Impact, <span class="text-gradient" data-translate-key="hero_title_gradient">Effortlessly.</span>
                     </h1>
-                    <p class="mt-4 max-w-3xl mx-auto text-lg md:text-xl" style="color: var(--text-secondary);">The modern operations hub for Omaha's nonprofits and community groups. Stop juggling spreadsheets and start amplifying your mission.</p>
+                    <p class="mt-4 max-w-3xl mx-auto text-lg md:text-xl" style="color: var(--text-secondary);" data-translate-key="hero_subtitle">The modern operations hub for Omaha's nonprofits and community groups. Stop juggling spreadsheets and start amplifying your mission.</p>
                     <div class="mt-8 flex justify-center gap-4">
-                        <a href="#waitlist" class="btn-gradient text-black px-8 py-4 rounded-lg font-bold text-lg hover:opacity-90 transition-opacity shadow-lg">Join the Early Access Waitlist</a>
+                        <a href="#waitlist" class="btn-gradient text-black px-8 py-4 rounded-lg font-bold text-lg hover:opacity-90 transition-opacity shadow-lg" data-translate-key="hero_cta">Join the Early Access Waitlist</a>
                     </div>
                 </div>
             </div>
@@ -118,27 +194,27 @@
             <div id="problem" class="py-16 md:py-24" style="background-color: var(--bg-secondary);">
                 <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="text-center mb-12">
-                        <h2 class="text-3xl md:text-4xl font-bold" style="color: var(--text-primary);">Built for the Hustle of Community Leaders</h2>
-                        <p class="mt-3 max-w-2xl mx-auto text-lg" style="color: var(--text-secondary);">We get it. You're passionate, dedicated, and wearing way too many hats. Your tools shouldn't add to the chaos.</p>
+                        <h2 class="text-3xl md:text-4xl font-bold" style="color: var(--text-primary);" data-translate-key="problem_title">Built for the Hustle of Community Leaders</h2>
+                        <p class="mt-3 max-w-2xl mx-auto text-lg" style="color: var(--text-secondary);" data-translate-key="problem_subtitle">We get it. You're passionate, dedicated, and wearing way too many hats. Your tools shouldn't add to the chaos.</p>
                     </div>
                     <div class="max-w-4xl mx-auto p-4 rounded-xl shadow-lg" style="background-color: var(--bg-primary);">
                         <div class="flex justify-center border-b" style="border-color: var(--border-primary);">
-                            <button data-tab="dilemma" class="pain-tab active-tab px-6 py-3 text-sm font-semibold border-b-2" style="color: var(--text-primary); border-color: var(--brand-color-start);">The "Do-It-All" Dilemma</button>
-                            <button data-tab="trap" class="pain-tab px-6 py-3 text-sm font-semibold border-b-2 border-transparent" style="color: var(--text-secondary);">The Technology Trap</button>
+                            <button data-tab="dilemma" class="pain-tab active-tab px-6 py-3 text-sm font-semibold border-b-2" style="color: var(--text-primary); border-color: var(--brand-color-start);" data-translate-key="problem_tab1">The "Do-It-All" Dilemma</button>
+                            <button data-tab="trap" class="pain-tab px-6 py-3 text-sm font-semibold border-b-2 border-transparent" style="color: var(--text-secondary);" data-translate-key="problem_tab2">The Technology Trap</button>
                         </div>
                         <div id="pain-content" class="p-6 md:p-8">
                             <div id="dilemma-content" class="pain-tab-content fade-in">
                                 <div class="grid md:grid-cols-2 gap-8 items-center">
                                     <div>
-                                        <h3 class="text-2xl font-semibold" style="color: var(--text-primary);">Operational Overload</h3>
-                                        <p class="mt-4" style="color: var(--text-secondary);">Leaders of small organizations are stretched thin, leading to burnout. Our primary goal is to give you back time, your most precious resource.</p>
+                                        <h3 class="text-2xl font-semibold" style="color: var(--text-primary);" data-translate-key="dilemma_title">Operational Overload</h3>
+                                        <p class="mt-4" style="color: var(--text-secondary);" data-translate-key="dilemma_text">Leaders of small organizations are stretched thin, leading to burnout. Our primary goal is to give you back time, your most precious resource.</p>
                                     </div>
                                     <div class="p-6 rounded-lg" style="background-color: var(--bg-secondary);">
-                                        <h4 class="font-semibold" style="color: var(--text-primary);">Sound Familiar?</h4>
+                                        <h4 class="font-semibold" style="color: var(--text-primary);" data-translate-key="dilemma_box_title">Sound Familiar?</h4>
                                         <ul class="mt-3 space-y-3" style="color: var(--text-secondary);">
-                                            <li class="flex items-start"><span class="mr-3 text-brand">➔</span> Not enough staff for the work</li>
-                                            <li class="flex items-start"><span class="mr-3 text-brand">➔</span> Inefficient administrative office</li>
-                                            <li class="flex items-start"><span class="mr-3 text-brand">➔</span> Constant limits on time & money</li>
+                                            <li class="flex items-start"><span class="mr-3 text-brand">➔</span> <span data-translate-key="dilemma_pain1">Not enough staff for the work</span></li>
+                                            <li class="flex items-start"><span class="mr-3 text-brand">➔</span> <span data-translate-key="dilemma_pain2">Inefficient administrative office</span></li>
+                                            <li class="flex items-start"><span class="mr-3 text-brand">➔</span> <span data-translate-key="dilemma_pain3">Constant limits on time & money</span></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -146,15 +222,15 @@
                             <div id="trap-content" class="pain-tab-content hidden fade-in">
                                 <div class="grid md:grid-cols-2 gap-8 items-center">
                                     <div>
-                                        <h3 class="text-2xl font-semibold" style="color: var(--text-primary);">The Technology Trap</h3>
-                                        <p class="mt-4" style="color: var(--text-secondary);">A patchwork of free tools creates "technology overload" and data silos, forcing manual work. The intended solution becomes part of the problem.</p>
+                                        <h3 class="text-2xl font-semibold" style="color: var(--text-primary);" data-translate-key="trap_title">The Technology Trap</h3>
+                                        <p class="mt-4" style="color: var(--text-secondary);" data-translate-key="trap_text">A patchwork of free tools creates "technology overload" and data silos, forcing manual work. The intended solution becomes part of the problem.</p>
                                     </div>
                                     <div class="p-6 rounded-lg" style="background-color: var(--bg-secondary);">
-                                        <h4 class="font-semibold" style="color: var(--text-primary);">The Fragmentation Effect:</h4>
+                                        <h4 class="font-semibold" style="color: var(--text-primary);" data-translate-key="trap_box_title">The Fragmentation Effect:</h4>
                                         <ul class="mt-3 space-y-3" style="color: var(--text-secondary);">
-                                            <li class="flex items-start"><span class="mr-3 text-red-500">➔</span> Volunteer lists don't talk to donor lists.</li>
-                                            <li class="flex items-start"><span class="mr-3 text-red-500">➔</span> Data silos require manual re-entry.</li>
-                                            <li class="flex items-start"><span class="mr-3 text-red-500">➔</span> Overwhelming for non-technical users.</li>
+                                            <li class="flex items-start"><span class="mr-3 text-red-500">➔</span> <span data-translate-key="trap_pain1">Volunteer lists don't talk to donor lists.</span></li>
+                                            <li class="flex items-start"><span class="mr-3 text-red-500">➔</span> <span data-translate-key="trap_pain2">Data silos require manual re-entry.</span></li>
+                                            <li class="flex items-start"><span class="mr-3 text-red-500">➔</span> <span data-translate-key="trap_pain3">Overwhelming for non-technical users.</span></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -167,17 +243,17 @@
             <div id="gap" class="py-16 md:py-24" style="background-color: var(--bg-primary);">
                 <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="text-center mb-12">
-                        <h2 class="text-3xl md:text-4xl font-bold" style="color: var(--text-primary);">A Clear Gap in the Market</h2>
-                        <p class="mt-3 max-w-2xl mx-auto text-lg" style="color: var(--text-secondary);">Existing tools weren't built for organizations that *do* things. They were built for fundraising. We're changing that.</p>
+                        <h2 class="text-3xl md:text-4xl font-bold" style="color: var(--text-primary);" data-translate-key="gap_title">A Clear Gap in the Market</h2>
+                        <p class="mt-3 max-w-2xl mx-auto text-lg" style="color: var(--text-secondary);" data-translate-key="gap_subtitle">Existing tools weren't built for organizations that *do* things. They were built for fundraising. We're changing that.</p>
                     </div>
                     <div class="p-4 sm:p-6 rounded-xl">
                         <div class="text-center mb-6">
-                            <p class="mb-4" style="color: var(--text-secondary);">Interact with the chart to see how competitors stack up.</p>
+                            <p class="mb-4" style="color: var(--text-secondary);" data-translate-key="gap_chart_intro">Interact with the chart to see how competitors stack up.</p>
                             <div id="competitor-controls" class="flex flex-wrap justify-center gap-2">
-                                 <button data-tier="all" class="tier-btn active btn-gradient text-black px-4 py-2 text-sm font-semibold rounded-full">All Competitors</button>
-                                 <button data-tier="crm" class="tier-btn px-4 py-2 text-sm font-semibold rounded-full border" style="background-color: var(--bg-secondary); color: var(--text-secondary); border-color: var(--border-primary);">Tier 1: CRMs</button>
-                                 <button data-tier="volunteer" class="tier-btn px-4 py-2 text-sm font-semibold rounded-full border" style="background-color: var(--bg-secondary); color: var(--text-secondary); border-color: var(--border-primary);">Tier 2: Volunteer</button>
-                                 <button data-tier="niche" class="tier-btn px-4 py-2 text-sm font-semibold rounded-full border" style="background-color: var(--bg-secondary); color: var(--text-secondary); border-color: var(--border-primary);">Tier 3: Niche</button>
+                                 <button data-tier="all" class="tier-btn active btn-gradient text-black px-4 py-2 text-sm font-semibold rounded-full" data-translate-key="gap_btn_all">All Competitors</button>
+                                 <button data-tier="crm" class="tier-btn px-4 py-2 text-sm font-semibold rounded-full border" style="background-color: var(--bg-secondary); color: var(--text-secondary); border-color: var(--border-primary);" data-translate-key="gap_btn_crm">Tier 1: CRMs</button>
+                                 <button data-tier="volunteer" class="tier-btn px-4 py-2 text-sm font-semibold rounded-full border" style="background-color: var(--bg-secondary); color: var(--text-secondary); border-color: var(--border-primary);" data-translate-key="gap_btn_volunteer">Tier 2: Volunteer</button>
+                                 <button data-tier="niche" class="tier-btn px-4 py-2 text-sm font-semibold rounded-full border" style="background-color: var(--bg-secondary); color: var(--text-secondary); border-color: var(--border-primary);" data-translate-key="gap_btn_niche">Tier 3: Niche</button>
                             </div>
                         </div>
                         <div class="grid lg:grid-cols-5 gap-8 items-center">
@@ -187,8 +263,8 @@
                                 </div>
                             </div>
                             <div id="competitor-analysis" class="lg:col-span-2 p-6 rounded-lg fade-in" style="background-color: var(--bg-secondary);">
-                                <h3 id="analysis-title" class="text-xl font-semibold" style="color: var(--text-primary);">The "Logistics-First" Opportunity</h3>
-                                <p id="analysis-text" class="mt-2" style="color: var(--text-secondary);">No single platform effectively unifies logistics, volunteer management, and simple fundraising. CRMs are built for fundraising, not operations. Specialized tools perpetuate data silos. This creates the strategic opening for a platform built with operations at its core.</p>
+                                <h3 id="analysis-title" class="text-xl font-semibold" style="color: var(--text-primary);" data-translate-key="gap_analysis_title">The "Logistics-First" Opportunity</h3>
+                                <p id="analysis-text" class="mt-2" style="color: var(--text-secondary);" data-translate-key="gap_analysis_text">No single platform effectively unifies logistics, volunteer management, and simple fundraising. CRMs are built for fundraising, not operations. Specialized tools perpetuate data silos. This creates the strategic opening for a platform built with operations at its core.</p>
                             </div>
                         </div>
                     </div>
@@ -199,56 +275,56 @@
                 <div class="container mx-auto px-6">
                     <div id="get-involved">
                         <div class="text-center mb-12">
-                            <h2 class="text-3xl md:text-4xl font-bold" style="color: var(--text-primary);">Get Early Access & Help Us Build It For You</h2>
-                            <p class="text-lg mt-2" style="color: var(--text-secondary);">Be the first to know when we launch. Your feedback will shape the future of our platform.</p>
+                            <h2 class="text-3xl md:text-4xl font-bold" style="color: var(--text-primary);" data-translate-key="waitlist_title">Get Early Access & Help Us Build It For You</h2>
+                            <p class="text-lg mt-2" style="color: var(--text-secondary);" data-translate-key="waitlist_subtitle">Be the first to know when we launch. Your feedback will shape the future of our platform.</p>
                         </div>
                         <form id="interest-form" class="max-w-3xl mx-auto space-y-8 p-8 rounded-xl shadow-lg" style="background-color: var(--bg-primary);">
                             <div>
-                                <label class="block text-lg font-bold mb-4 text-center" style="color: var(--text-primary);">Which tools would help you most?</label>
+                                <label class="block text-lg font-bold mb-4 text-center" style="color: var(--text-primary);" data-translate-key="waitlist_form_prompt">Which tools would help you most?</label>
                                 <div id="features-container" class="grid md:grid-cols-3 gap-6">
                                     <div class="feature-card p-6 rounded-lg text-center" data-feature="Volunteers">
                                         <div class="card-icon flex items-center justify-center h-12 w-12 rounded-full mx-auto mb-3">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                                         </div>
-                                        <h4 class="font-bold mb-1" style="color: var(--text-primary);">Volunteer Hub</h4>
-                                        <p class="text-sm" style="color: var(--text-secondary);">Scheduling & Comms</p>
+                                        <h4 class="font-bold mb-1" style="color: var(--text-primary);" data-translate-key="waitlist_card1_title">Volunteer Hub</h4>
+                                        <p class="text-sm" style="color: var(--text-secondary);" data-translate-key="waitlist_card1_text">Scheduling & Comms</p>
                                     </div>
                                     <div class="feature-card p-6 rounded-lg text-center" data-feature="Fundraising">
                                        <div class="card-icon flex items-center justify-center h-12 w-12 rounded-full mx-auto mb-3">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
                                         </div>
-                                        <h4 class="font-bold mb-1" style="color: var(--text-primary);">Fundraising</h4>
-                                        <p class="text-sm" style="color: var(--text-secondary);">Campaigns & Donations</p>
+                                        <h4 class="font-bold mb-1" style="color: var(--text-primary);" data-translate-key="waitlist_card2_title">Fundraising</h4>
+                                        <p class="text-sm" style="color: var(--text-secondary);" data-translate-key="waitlist_card2_text">Campaigns & Donations</p>
                                     </div>
                                     <div class="feature-card p-6 rounded-lg text-center" data-feature="Operations">
                                         <div class="card-icon flex items-center justify-center h-12 w-12 rounded-full mx-auto mb-3">
                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
                                         </div>
-                                        <h4 class="font-bold mb-1" style="color: var(--text-primary);">Operations</h4>
-                                        <p class="text-sm" style="color: var(--text-secondary);">Inventory & Events</p>
+                                        <h4 class="font-bold mb-1" style="color: var(--text-primary);" data-translate-key="waitlist_card3_title">Operations</h4>
+                                        <p class="text-sm" style="color: var(--text-secondary);" data-translate-key="waitlist_card3_text">Inventory & Events</p>
                                     </div>
                                 </div>
                                 <input type="hidden" id="features-input" name="features">
                             </div>
                             <div class="grid sm:grid-cols-2 gap-6 pt-4">
                                 <div>
-                                    <label for="name-input" class="block text-sm font-bold mb-2" style="color: var(--text-secondary);">Full Name</label>
+                                    <label for="name-input" class="block text-sm font-bold mb-2" style="color: var(--text-secondary);" data-translate-key="form_name">Full Name</label>
                                     <input type="text" id="name-input" placeholder="Jane Doe" required class="w-full px-4 py-3 rounded-lg border" style="background-color: var(--bg-primary); border-color: var(--border-primary);" />
                                 </div>
                                 <div>
-                                    <label for="email-input" class="block text-sm font-bold mb-2" style="color: var(--text-secondary);">Email Address</label>
+                                    <label for="email-input" class="block text-sm font-bold mb-2" style="color: var(--text-secondary);" data-translate-key="form_email">Email Address</label>
                                     <input type="email" id="email-input" placeholder="you@youremail.com" required class="w-full px-4 py-3 rounded-lg border" style="background-color: var(--bg-primary); border-color: var(--border-primary);" />
                                 </div>
                             </div>
                             <div class="text-center pt-6">
-                                <button type="submit" class="w-full sm:w-auto btn-gradient font-bold text-lg px-12 py-4 rounded-lg hover:opacity-90 transition-opacity focus:outline-none focus:ring-4 focus:ring-green-400 focus:ring-opacity-50">
+                                <button type="submit" class="w-full sm:w-auto btn-gradient font-bold text-lg px-12 py-4 rounded-lg hover:opacity-90 transition-opacity focus:outline-none focus:ring-4 focus:ring-green-400 focus:ring-opacity-50" data-translate-key="form_submit_button">
                                     Join the Waitlist
                                 </button>
                             </div>
                         </form>
                         <div id="success-message" class="hidden mt-8 text-center success-box p-8 rounded-lg max-w-2xl mx-auto">
-                            <h4 class="font-bold text-2xl">Thank you! You're on the list.</h4>
-                            <p class="mt-2 text-lg">We're thrilled to have you. Your feedback is vital, and we can't wait to share our progress with you soon!</p>
+                            <h4 class="font-bold text-2xl" data-translate-key="success_title">Thank you! You're on the list.</h4>
+                            <p class="mt-2 text-lg" data-translate-key="success_text">We're thrilled to have you. Your feedback is vital, and we can't wait to share our progress with you soon!</p>
                         </div>
                     </div>
                 </div>
@@ -259,18 +335,18 @@
         <section id="features" class="page-section">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
                 <div class="text-center max-w-3xl mx-auto mb-16">
-                    <h2 class="text-4xl md:text-5xl font-extrabold mb-4" style="color: var(--text-primary);">One Hub, Total Control.</h2>
-                    <p class="text-xl leading-relaxed" style="color: var(--text-secondary);">We handle the complexity so you can focus on your community. Every feature is designed with the specific needs of local organizations in mind.</p>
+                    <h2 class="text-4xl md:text-5xl font-extrabold mb-4" style="color: var(--text-primary);" data-translate-key="features_title">One Hub, Total Control.</h2>
+                    <p class="text-xl leading-relaxed" style="color: var(--text-secondary);" data-translate-key="features_subtitle">We handle the complexity so you can focus on your community. Every feature is designed with the specific needs of local organizations in mind.</p>
                 </div>
                 <div class="space-y-20">
                     <div class="grid md:grid-cols-2 gap-12 items-center">
                         <div class="text-center md:text-left">
-                            <h3 class="text-3xl font-bold mb-4">Volunteer Command Center</h3>
-                            <p class="text-lg mb-6" style="color: var(--text-secondary);">Escape the headache of spreadsheets and phone tag. Create event schedules, define roles, and empower volunteers to sign up for shifts themselves. Send targeted reminders and track hours automatically.</p>
+                            <h3 class="text-3xl font-bold mb-4" data-translate-key="feature1_title">Volunteer Command Center</h3>
+                            <p class="text-lg mb-6" style="color: var(--text-secondary);" data-translate-key="feature1_text">Escape the headache of spreadsheets and phone tag. Create event schedules, define roles, and empower volunteers to sign up for shifts themselves. Send targeted reminders and track hours automatically.</p>
                             <ul class="space-y-2 text-left" style="color: var(--text-secondary);">
-                                <li class="flex items-center"><span class="text-brand mr-3">✔</span> Simple Public-Facing Schedules</li>
-                                <li class="flex items-center"><span class="text-brand mr-3">✔</span> Volunteer Database with Skill Tracking</li>
-                                <li class="flex items-center"><span class="text-brand mr-3">✔</span> Automated Reminders & Communication</li>
+                                <li class="flex items-center"><span class="text-brand mr-3">✔</span> <span data-translate-key="feature1_bullet1">Simple Public-Facing Schedules</span></li>
+                                <li class="flex items-center"><span class="text-brand mr-3">✔</span> <span data-translate-key="feature1_bullet2">Volunteer Database with Skill Tracking</span></li>
+                                <li class="flex items-center"><span class="text-brand mr-3">✔</span> <span data-translate-key="feature1_bullet3">Automated Reminders & Communication</span></li>
                             </ul>
                         </div>
                         <div class="p-8 rounded-2xl" style="background-color: var(--bg-secondary);"><img src="https://placehold.co/600x450/43e97b/1A202C?text=Volunteer+Scheduling" alt="Volunteer Scheduling Illustration" class="rounded-lg shadow-xl"></div>
@@ -278,23 +354,23 @@
                     <div class="grid md:grid-cols-2 gap-12 items-center">
                         <div class="p-8 rounded-2xl md:order-2" style="background-color: var(--bg-secondary);"><img src="https://placehold.co/600x450/38f9d7/1A202C?text=Operations+Dashboard" alt="Operations Dashboard Illustration" class="rounded-lg shadow-xl"></div>
                         <div class="text-center md:text-left md:order-1">
-                            <h3 class="text-3xl font-bold mb-4">Logistics & Operations Hub</h3>
-                            <p class="text-lg mb-6" style="color: var(--text-secondary);">Manage more than just inventory. Track physical assets, plan community events, and oversee program delivery from a single dashboard. Know what you have, where it is, and where it needs to go.</p>
+                            <h3 class="text-3xl font-bold mb-4" data-translate-key="feature2_title">Logistics & Operations Hub</h3>
+                            <p class="text-lg mb-6" style="color: var(--text-secondary);" data-translate-key="feature2_text">Manage more than just inventory. Track physical assets, plan community events, and oversee program delivery from a single dashboard. Know what you have, where it is, and where it needs to go.</p>
                             <ul class="space-y-2 text-left" style="color: var(--text-secondary);">
-                                <li class="flex items-center"><span class="text-brand mr-3">✔</span> Inventory & Asset Tracking with Spoilage Alerts</li>
-                                <li class="flex items-center"><span class="text-brand mr-3">✔</span> Event Management (Ticketing & Check-in)</li>
-                                <li class="flex items-center"><span class="text-brand mr-3">✔</span> Program Management (Client & Service Tracking)</li>
+                                <li class="flex items-center"><span class="text-brand mr-3">✔</span> <span data-translate-key="feature2_bullet1">Inventory & Asset Tracking with Spoilage Alerts</span></li>
+                                <li class="flex items-center"><span class="text-brand mr-3">✔</span> <span data-translate-key="feature2_bullet2">Event Management (Ticketing & Check-in)</span></li>
+                                <li class="flex items-center"><span class="text-brand mr-3">✔</span> <span data-translate-key="feature2_bullet3">Program Management (Client & Service Tracking)</span></li>
                             </ul>
                         </div>
                     </div>
                      <div class="grid md:grid-cols-2 gap-12 items-center">
                         <div class="text-center md:text-left">
-                            <h3 class="text-3xl font-bold mb-4">Fundraising & Supporter CRM</h3>
-                            <p class="text-lg mb-6" style="color: var(--text-secondary);">Launch beautiful campaigns in minutes. Our simple tools help you accept donations, track progress, and understand your supporters on a deeper level by unifying their volunteer and donor activity.</p>
+                            <h3 class="text-3xl font-bold mb-4" data-translate-key="feature3_title">Fundraising & Supporter CRM</h3>
+                            <p class="text-lg mb-6" style="color: var(--text-secondary);" data-translate-key="feature3_text">Launch beautiful campaigns in minutes. Our simple tools help you accept donations, track progress, and understand your supporters on a deeper level by unifying their volunteer and donor activity.</p>
                             <ul class="space-y-2 text-left" style="color: var(--text-secondary);">
-                                <li class="flex items-center"><span class="text-brand mr-3">✔</span> Embeddable Donation Forms</li>
-                                <li class="flex items-center"><span class="text-brand mr-3">✔</span> Real-time Campaign Dashboards</li>
-                                <li class="flex items-center"><span class="text-brand mr-3">✔</span> 360-Degree Integrated Supporter View</li>
+                                <li class="flex items-center"><span class="text-brand mr-3">✔</span> <span data-translate-key="feature3_bullet1">Embeddable Donation Forms</span></li>
+                                <li class="flex items-center"><span class="text-brand mr-3">✔</span> <span data-translate-key="feature3_bullet2">Real-time Campaign Dashboards</span></li>
+                                <li class="flex items-center"><span class="text-brand mr-3">✔</span> <span data-translate-key="feature3_bullet3">360-Degree Integrated Supporter View</span></li>
                             </ul>
                         </div>
                         <div class="p-8 rounded-2xl" style="background-color: var(--bg-secondary);"><img src="https://placehold.co/600x450/43e97b/1A202C?text=Supporter+Profiles" alt="Supporter Profiles Illustration" class="rounded-lg shadow-xl"></div>
@@ -303,54 +379,108 @@
             </div>
         </section>
 
+        <!-- ROADMAP PAGE -->
+        <section id="roadmap" class="page-section">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <h2 class="text-4xl md:text-5xl font-extrabold mb-4" style="color: var(--text-primary);" data-translate-key="roadmap_title">Our Vision for the Future</h2>
+                    <p class="text-xl leading-relaxed" style="color: var(--text-secondary);" data-translate-key="roadmap_subtitle">We're just getting started. Our roadmap is designed to grow with you, delivering more power and insight at every stage.</p>
+                </div>
+                <div class="max-w-3xl mx-auto">
+                    <div class="relative border-l-2 pl-12 space-y-20" style="border-color: var(--border-primary);">
+                        <div class="timeline-item active">
+                            <h3 class="text-2xl font-bold mb-3 text-brand" data-translate-key="roadmap1_title">Now: The Foundation</h3>
+                            <p class="mb-4" style="color: var(--text-secondary);" data-translate-key="roadmap1_text">Solving your most pressing daily challenges first. Our initial platform provides the essential, integrated tools to manage your core operations without the chaos.</p>
+                            <ul class="space-y-2 list-disc list-inside" style="color: var(--text-secondary);">
+                                <li data-translate-key="roadmap1_bullet1">Unified Volunteer & Inventory Management</li>
+                                <li data-translate-key="roadmap1_bullet2">Simple, Embeddable Donation Forms</li>
+                                <li data-translate-key="roadmap1_bullet3">Integrated Supporter & Volunteer Database</li>
+                            </ul>
+                        </div>
+                        <div class="timeline-item">
+                            <h3 class="text-2xl font-bold mb-3" style="color: var(--text-primary);" data-translate-key="roadmap2_title">Next: Deeper Insights</h3>
+                            <p class="mb-4" style="color: var(--text-secondary);" data-translate-key="roadmap2_text">Moving from just managing your work to measuring and proving your impact. These tools are designed to help you tell your story to funders and the community.</p>
+                             <ul class="space-y-2 list-disc list-inside" style="color: var(--text-secondary);">
+                                <li data-translate-key="roadmap2_bullet1">Advanced Reporting & Custom Dashboards</li>
+                                <li data-translate-key="roadmap2_bullet2">Grant Application & Deadline Tracking</li>
+                                <li data-translate-key="roadmap2_bullet3">Secure Client Intake & Service Logging</li>
+                            </ul>
+                        </div>
+                        <div class="timeline-item">
+                            <h3 class="text-2xl font-bold mb-3" style="color: var(--text-primary);" data-translate-key="roadmap3_title">Future: A Connected Ecosystem</h3>
+                            <p class="mb-4" style="color: var(--text-secondary);" data-translate-key="roadmap3_text">Connecting your mission to the tools you already use and the community you serve, wherever they are.</p>
+                             <ul class="space-y-2 list-disc list-inside" style="color: var(--text-secondary);">
+                                <li data-translate-key="roadmap3_bullet1">Integrations with QuickBooks, Mailchimp, etc.</li>
+                                <li data-translate-key="roadmap3_bullet2">Dedicated Mobile App for iOS & Android</li>
+                                <li data-translate-key="roadmap3_bullet3">Community & Corporate Partnership Portals</li>
+                            </ul>
+                        </div>
+                         <div class="timeline-item">
+                            <h3 class="text-2xl font-bold mb-3" style="color: var(--text-primary);" data-translate-key="roadmap4_title">The Horizon: Predictive Power</h3>
+                            <p class="mb-4" style="color: var(--text-secondary);" data-translate-key="roadmap4_text">Leveraging your data to provide unprecedented value. We aim to provide smart suggestions to help you anticipate needs before they arise.</p>
+                             <ul class="space-y-2 list-disc list-inside" style="color: var(--text-secondary);">
+                                <li data-translate-key="roadmap4_bullet1">Predictive Inventory & Donation Forecasting</li>
+                                <li data-translate-key="roadmap4_bullet2">Automated Grant Report Generation</li>
+                                <li data-translate-key="roadmap4_bullet3">Intelligent Volunteer Matching</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                 <div class="text-center mt-20">
+                    <p class="text-lg mb-4" style="color: var(--text-secondary);" data-translate-key="roadmap_cta_text">Excited about what's to come? Join our waitlist to be part of the journey.</p>
+                    <a href="#waitlist" class="nav-trigger btn-gradient text-black px-8 py-4 rounded-lg font-bold text-lg hover:opacity-90 transition-opacity shadow-lg" data-translate-key="nav_waitlist_button">Join Waitlist</a>
+                </div>
+            </div>
+        </section>
+
         <!-- OUR MISSION PAGE -->
         <section id="mission" class="page-section">
              <div class="py-16 md:py-24" style="background-color: var(--bg-secondary);">
                 <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <h2 class="text-4xl md:text-5xl font-extrabold mb-4" style="color: var(--text-primary);">From Omaha, For Omaha.</h2>
-                    <p class="text-xl leading-relaxed max-w-3xl mx-auto" style="color: var(--text-secondary);">We're not a faceless corporation. We're your neighbors, building something we believe our city deserves.</p>
+                    <h2 class="text-4xl md:text-5xl font-extrabold mb-4" style="color: var(--text-primary);" data-translate-key="mission_title">From Omaha, For Omaha.</h2>
+                    <p class="text-xl leading-relaxed max-w-3xl mx-auto" style="color: var(--text-secondary);" data-translate-key="mission_subtitle">We're not a faceless corporation. We're your neighbors, building something we believe our city deserves.</p>
                 </div>
             </div>
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
                 <div class="max-w-4xl mx-auto space-y-12">
                     <div>
-                        <h3 class="text-2xl font-bold mb-4 text-brand">The "Why"</h3>
-                        <p class="text-lg" style="color: var(--text-secondary);">The Counter Collective started over coffee in the Old Market. We saw the passion and dedication of local organizers, but also the struggle: outdated software, scattered spreadsheets, and too much time spent on admin instead of the mission. We analyzed the market and saw a clear gap for a 'logistics-first' platform designed for the operational realities of community work, not just fundraising.</p>
+                        <h3 class="text-2xl font-bold mb-4 text-brand" data-translate-key="mission_why_title">The "Why"</h3>
+                        <p class="text-lg" style="color: var(--text-secondary);" data-translate-key="mission_why_text">The Counter Collective started over coffee in the Old Market. We saw the passion and dedication of local organizers, but also the struggle: outdated software, scattered spreadsheets, and too much time spent on admin instead of the mission. We analyzed the market and saw a clear gap for a 'logistics-first' platform designed for the operational realities of community work, not just fundraising.</p>
                     </div>
                     <div>
-                        <h3 class="text-2xl font-bold mb-4 text-brand">Our Philosophy: Radical Simplicity</h3>
-                        <p class="text-lg" style="color: var(--text-secondary);">Our core user is a non-technical, time-starved community leader. That's why ease of use is our most important feature. We believe powerful software can and should be intuitive. Every screen, button, and workflow is designed to reduce complexity and give you back time, so you can focus on what matters most.</p>
+                        <h3 class="text-2xl font-bold mb-4 text-brand" data-translate-key="mission_philosophy_title">Our Philosophy: Radical Simplicity</h3>
+                        <p class="text-lg" style="color: var(--text-secondary);" data-translate-key="mission_philosophy_text">Our core user is a non-technical, time-starved community leader. That's why ease of use is our most important feature. We believe powerful software can and should be intuitive. Every screen, button, and workflow is designed to reduce complexity and give you back time, so you can focus on what matters most.</p>
                     </div>
                     <div>
-                        <h3 class="text-2xl font-bold mb-4 text-brand">Our Commitment: Win Omaha First</h3>
-                        <p class="text-lg" style="color: var(--text-secondary);">Our go-to-market strategy is hyper-focused on our home. We are committed to building deep relationships with local partners like the Nonprofit Association of the Midlands and the Omaha Community Foundation. By cultivating a cohort of local "Founding Members," we can build a powerful base of trust, credibility, and success stories before expanding further. This isn't just a business plan; it's our commitment to our community.</p>
+                        <h3 class="text-2xl font-bold mb-4 text-brand" data-translate-key="mission_commitment_title">Our Commitment: Win Omaha First</h3>
+                        <p class="text-lg" style="color: var(--text-secondary);" data-translate-key="mission_commitment_text">Our go-to-market strategy is hyper-focused on our home. We are committed to building deep relationships with local partners like the Nonprofit Association of the Midlands and the Omaha Community Foundation. By cultivating a cohort of local "Founding Members," we can build a powerful base of trust, credibility, and success stories before expanding further. This isn't just a business plan; it's our commitment to our community.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- BLOG PAGE -->
+        <!-- BLOG PAGE (Placeholder) -->
         <section id="blog" class="page-section">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
                 <div class="text-center max-w-3xl mx-auto mb-16">
-                    <h2 class="text-4xl md:text-5xl font-extrabold mb-4" style="color: var(--text-primary);">Resources & Insights</h2>
-                    <p class="text-xl leading-relaxed" style="color: var(--text-secondary);">Actionable advice and stories from the front lines of community work. We're building a library of resources to help you succeed.</p>
+                    <h2 class="text-4xl md:text-5xl font-extrabold mb-4" style="color: var(--text-primary);" data-translate-key="blog_title">Resources & Insights</h2>
+                    <p class="text-xl leading-relaxed" style="color: var(--text-secondary);" data-translate-key="blog_subtitle">Actionable advice and stories from the front lines of community work. We're building a library of resources to help you succeed.</p>
                 </div>
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                     <div class="p-8 rounded-lg shadow-md flex flex-col" style="background-color: var(--bg-secondary);">
-                        <h3 class="text-xl font-bold mb-3" style="color: var(--text-primary);">Case Study: A Day in the Life of a Food Pantry</h3>
-                        <p class="mb-4 flex-grow" style="color: var(--text-secondary);">A deep dive into the operational realities of logistics-heavy organizations, from intake and compliance to managing spoilage.</p>
-                        <a href="#" class="font-semibold text-brand hover:underline">Read More →</a>
+                        <h3 class="text-xl font-bold mb-3" style="color: var(--text-primary);" data-translate-key="blog1_title">Case Study: A Day in the Life of a Food Pantry</h3>
+                        <p class="mb-4 flex-grow" style="color: var(--text-secondary);" data-translate-key="blog1_text">A deep dive into the operational realities of logistics-heavy organizations, from intake and compliance to managing spoilage.</p>
+                        <a href="#" class="font-semibold text-brand hover:underline" data-translate-key="blog_read_more">Read More →</a>
                     </div>
                     <div class="p-8 rounded-lg shadow-md flex flex-col" style="background-color: var(--bg-secondary);">
-                        <h3 class="text-xl font-bold mb-3" style="color: var(--text-primary);">How to Escape the Technology Trap</h3>
-                        <p class="mb-4 flex-grow" style="color: var(--text-secondary);">Is your collection of "helpful" free tools actually creating more work? A guide to overcoming technology overload.</p>
-                        <a href="#" class="font-semibold text-brand hover:underline">Read More →</a>
+                        <h3 class="text-xl font-bold mb-3" style="color: var(--text-primary);" data-translate-key="blog2_title">How to Escape the Technology Trap</h3>
+                        <p class="mb-4 flex-grow" style="color: var(--text-secondary);" data-translate-key="blog2_text">Is your collection of "helpful" free tools actually creating more work? A guide to overcoming technology overload.</p>
+                        <a href="#" class="font-semibold text-brand hover:underline" data-translate-key="blog_read_more">Read More →</a>
                     </div>
                     <div class="p-8 rounded-lg shadow-md flex flex-col" style="background-color: var(--bg-secondary);">
-                        <h3 class="text-xl font-bold mb-3" style="color: var(--text-primary);">5 Ways to Reduce Volunteer Burnout</h3>
-                        <p class="mb-4 flex-grow" style="color: var(--text-secondary);">Your volunteers are your most valuable asset. Learn how to fight the "Do-It-All Dilemma" and keep them engaged.</p>
-                        <a href="#" class="font-semibold text-brand hover:underline">Read More →</a>
+                        <h3 class="text-xl font-bold mb-3" style="color: var(--text-primary);" data-translate-key="blog3_title">5 Ways to Reduce Volunteer Burnout</h3>
+                        <p class="mb-4 flex-grow" style="color: var(--text-secondary);" data-translate-key="blog3_text">Your volunteers are your most valuable asset. Learn how to fight the "Do-It-All Dilemma" and keep them engaged.</p>
+                        <a href="#" class="font-semibold text-brand hover:underline" data-translate-key="blog_read_more">Read More →</a>
                     </div>
                 </div>
             </div>
@@ -360,23 +490,23 @@
         <section id="partners" class="page-section">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
                 <div class="text-center max-w-3xl mx-auto mb-16">
-                    <h2 class="text-4xl md:text-5xl font-extrabold mb-4" style="color: var(--text-primary);">Let's Work Together</h2>
-                    <p class="text-xl leading-relaxed" style="color: var(--text-secondary);">We're seeking passionate partners to help us build the future of community operations in Omaha and beyond.</p>
+                    <h2 class="text-4xl md:text-5xl font-extrabold mb-4" style="color: var(--text-primary);" data-translate-key="partners_title">Let's Work Together</h2>
+                    <p class="text-xl leading-relaxed" style="color: var(--text-secondary);" data-translate-key="partners_subtitle">We're seeking passionate partners to help us build the future of community operations in Omaha and beyond.</p>
                 </div>
                 <div class="max-w-4xl mx-auto space-y-12">
                     <div class="p-8 rounded-lg shadow-lg text-center" style="background-color: var(--bg-secondary);">
-                        <h3 class="text-2xl font-bold mb-3 text-brand">Become a Founding Member</h3>
-                        <p class="mb-6" style="color: var(--text-secondary);">We're offering the full Counter Collective platform **free, for life,** to the first 15 Omaha-based grassroots organizations that sign on. Help us build the perfect tool for your needs and get a powerful platform at no cost.</p>
-                        <a href="#waitlist" class="nav-trigger btn-gradient text-black px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity">Apply to be a Founding Member</a>
+                        <h3 class="text-2xl font-bold mb-3 text-brand" data-translate-key="partners_founding_title">Become a Founding Member</h3>
+                        <p class="mb-6" style="color: var(--text-secondary);" data-translate-key="partners_founding_text">We're offering the full Counter Collective platform **free, for life,** to the first 15 Omaha-based grassroots organizations that sign on. Help us build the perfect tool for your needs and get a powerful platform at no cost.</p>
+                        <a href="#waitlist" class="nav-trigger btn-gradient text-black px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity" data-translate-key="partners_founding_cta">Apply to be a Founding Member</a>
                     </div>
                     <div class="grid md:grid-cols-2 gap-8">
                         <div class="p-8 rounded-lg" style="background-color: var(--bg-secondary);">
-                            <h3 class="text-2xl font-bold mb-3" style="color: var(--text-primary);">For Nonprofit Associations & Foundations</h3>
-                            <p style="color: var(--text-secondary);">Offer a modern, valuable tool to your members and grantees. We can provide workshops, co-branded resources, and special access to help your network thrive.</p>
+                            <h3 class="text-2xl font-bold mb-3" style="color: var(--text-primary);" data-translate-key="partners_associations_title">For Nonprofit Associations & Foundations</h3>
+                            <p style="color: var(--text-secondary);" data-translate-key="partners_associations_text">Offer a modern, valuable tool to your members and grantees. We can provide workshops, co-branded resources, and special access to help your network thrive.</p>
                         </div>
                         <div class="p-8 rounded-lg" style="background-color: var(--bg-secondary);">
-                            <h3 class="text-2xl font-bold mb-3" style="color: var(--text-primary);">For Corporate Partners</h3>
-                            <p style="color: var(--text-secondary);">Streamline your corporate volunteer programs. Our future partnership portals will make it easy to manage your team's engagement with local causes.</p>
+                            <h3 class="text-2xl font-bold mb-3" style="color: var(--text-primary);" data-translate-key="partners_corporate_title">For Corporate Partners</h3>
+                            <p style="color: var(--text-secondary);" data-translate-key="partners_corporate_text">Streamline your corporate volunteer programs. Our future partnership portals will make it easy to manage your team's engagement with local causes.</p>
                         </div>
                     </div>
                 </div>
@@ -388,14 +518,14 @@
     <footer id="contact" style="background-color: var(--bg-secondary);">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
             <div class="text-center">
-                 <h2 class="text-3xl font-bold" style="color: var(--text-primary);">Questions? Ideas? Let's Talk.</h2>
-                 <p class="mt-4 max-w-2xl mx-auto" style="color: var(--text-secondary);">We're building this for you. If you have a question, an idea, or just want to say hello, we'd love to hear from you.</p>
+                 <h2 class="text-3xl font-bold" style="color: var(--text-primary);" data-translate-key="footer_title">Questions? Ideas? Let's Talk.</h2>
+                 <p class="mt-4 max-w-2xl mx-auto" style="color: var(--text-secondary);" data-translate-key="footer_text">We're building this for you. If you have a question, an idea, or just want to say hello, we'd love to hear from you.</p>
                  <div class="mt-8">
-                     <a href="mailto:contact@thecountercollective.com" class="btn-gradient text-black px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity shadow-lg">Contact Us</a>
+                     <a href="mailto:contact@thecountercollective.com" class="btn-gradient text-black px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity shadow-lg" data-translate-key="footer_cta">Contact Us</a>
                  </div>
             </div>
              <div class="mt-16 pt-8 border-t text-center text-sm" style="border-color: var(--border-primary); color: var(--text-secondary);">
-                <p>&copy; 2025 The Counter Collective. Made with ❤️ in Omaha, Nebraska.</p>
+                <p data-translate-key="footer_copyright">&copy; 2025 The Counter Collective. Made with ❤️ in Omaha, Nebraska.</p>
              </div>
         </div>
     </footer>
@@ -404,33 +534,147 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     let competitorChart;
-    const navTriggers = document.querySelectorAll('.nav-trigger');
+    const navTriggers = document.querySelectorAll('.nav-trigger, .mobile-nav-link');
     const navLinks = document.querySelectorAll('.nav-link');
     const pages = document.querySelectorAll('.page-section');
+    const hamburgerBtn = document.getElementById('hamburger-button');
+    const mobileMenu = document.getElementById('mobile-menu');
 
+    // --- TRANSLATION DATA ---
+    const translations = {
+        en: {
+            brand_name: "The Counter Collective",
+            nav_home: "Home", nav_features: "Features", nav_roadmap: "Roadmap", nav_mission: "Our Mission", nav_blog: "Blog", nav_partners: "Partners", nav_waitlist_button: "Join Waitlist",
+            hero_title: "Imagine the Impact,", hero_title_gradient: "Effortlessly.", hero_subtitle: "The modern operations hub for Omaha's nonprofits and community groups. Stop juggling spreadsheets and start amplifying your mission.", hero_cta: "Join the Early Access Waitlist",
+            problem_title: "Built for the Hustle of Community Leaders", problem_subtitle: "We get it. You're passionate, dedicated, and wearing way too many hats. Your tools shouldn't add to the chaos.",
+            problem_tab1: "The \"Do-It-All\" Dilemma", problem_tab2: "The Technology Trap",
+            dilemma_title: "Operational Overload", dilemma_text: "Leaders of small organizations are stretched thin, leading to burnout. Our primary goal is to give you back time, your most precious resource.",
+            dilemma_box_title: "Sound Familiar?", dilemma_pain1: "Not enough staff for the work", dilemma_pain2: "Inefficient administrative office", dilemma_pain3: "Constant limits on time & money",
+            trap_title: "The Technology Trap", trap_text: "A patchwork of free tools creates \"technology overload\" and data silos, forcing manual work. The intended solution becomes part of the problem.",
+            trap_box_title: "The Fragmentation Effect:", trap_pain1: "Volunteer lists don't talk to donor lists.", trap_pain2: "Data silos require manual re-entry.", trap_pain3: "Overwhelming for non-technical users.",
+            gap_title: "A Clear Gap in the Market", gap_subtitle: "Existing tools weren't built for organizations that *do* things. They were built for fundraising. We're changing that.",
+            gap_chart_intro: "Interact with the chart to see how competitors stack up.", gap_btn_all: "All Competitors", gap_btn_crm: "Tier 1: CRMs", gap_btn_volunteer: "Tier 2: Volunteer", gap_btn_niche: "Tier 3: Niche",
+            gap_analysis_title: "The \"Logistics-First\" Opportunity", gap_analysis_text: "No single platform effectively unifies logistics, volunteer management, and simple fundraising. CRMs are built for fundraising, not operations. Specialized tools perpetuate data silos. This creates the strategic opening for a platform built with operations at its core.",
+            waitlist_title: "Get Early Access & Help Us Build It For You", waitlist_subtitle: "Be the first to know when we launch. Your feedback will shape the future of our platform.",
+            waitlist_form_prompt: "Which tools would help you most?",
+            waitlist_card1_title: "Volunteer Hub", waitlist_card1_text: "Scheduling & Comms",
+            waitlist_card2_title: "Fundraising", waitlist_card2_text: "Campaigns & Donations",
+            waitlist_card3_title: "Operations", waitlist_card3_text: "Inventory & Events",
+            form_name: "Full Name", form_email: "Email Address", form_submit_button: "Join the Waitlist",
+            success_title: "Thank you! You're on the list.", success_text: "We're thrilled to have you. Your feedback is vital, and we can't wait to share our progress with you soon!",
+            features_title: "One Hub, Total Control.", features_subtitle: "We handle the complexity so you can focus on your community. Every feature is designed with the specific needs of local organizations in mind.",
+            feature1_title: "Volunteer Command Center", feature1_text: "Escape the headache of spreadsheets and phone tag. Create event schedules, define roles, and empower volunteers to sign up for shifts themselves. Send targeted reminders and track hours automatically.",
+            feature1_bullet1: "Simple Public-Facing Schedules", feature1_bullet2: "Volunteer Database with Skill Tracking", feature1_bullet3: "Automated Reminders & Communication",
+            feature2_title: "Logistics & Operations Hub", feature2_text: "Manage more than just inventory. Track physical assets, plan community events, and oversee program delivery from a single dashboard. Know what you have, where it is, and where it needs to go.",
+            feature2_bullet1: "Inventory & Asset Tracking with Spoilage Alerts", feature2_bullet2: "Event Management (Ticketing & Check-in)", feature2_bullet3: "Program Management (Client & Service Tracking)",
+            feature3_title: "Fundraising & Supporter CRM", feature3_text: "Launch beautiful campaigns in minutes. Our simple tools help you accept donations, track progress, and understand your supporters on a deeper level by unifying their volunteer and donor activity.",
+            feature3_bullet1: "Embeddable Donation Forms", feature3_bullet2: "Real-time Campaign Dashboards", feature3_bullet3: "360-Degree Integrated Supporter View",
+            roadmap_title: "Our Vision for the Future", roadmap_subtitle: "We're just getting started. Our roadmap is designed to grow with you, delivering more power and insight at every stage.",
+            roadmap1_title: "Now: The Foundation", roadmap1_text: "Solving your most pressing daily challenges first. Our initial platform provides the essential, integrated tools to manage your core operations without the chaos.",
+            roadmap1_bullet1: "Unified Volunteer & Inventory Management", roadmap1_bullet2: "Simple, Embeddable Donation Forms", roadmap1_bullet3: "Integrated Supporter & Volunteer Database",
+            roadmap2_title: "Next: Deeper Insights", roadmap2_text: "Moving from just managing your work to measuring and proving your impact. These tools are designed to help you tell your story to funders and the community.",
+            roadmap2_bullet1: "Advanced Reporting & Custom Dashboards", roadmap2_bullet2: "Grant Application & Deadline Tracking", roadmap2_bullet3: "Secure Client Intake & Service Logging",
+            roadmap3_title: "Future: A Connected Ecosystem", roadmap3_text: "Connecting your mission to the tools you already use and the community you serve, wherever they are.",
+            roadmap3_bullet1: "Integrations with QuickBooks, Mailchimp, etc.", roadmap3_bullet2: "Dedicated Mobile App for iOS & Android", roadmap3_bullet3: "Community & Corporate Partnership Portals",
+            roadmap4_title: "The Horizon: Predictive Power", roadmap4_text: "Leveraging your data to provide unprecedented value. We aim to provide smart suggestions to help you anticipate needs before they arise.",
+            roadmap4_bullet1: "Predictive Inventory & Donation Forecasting", roadmap4_bullet2: "Automated Grant Report Generation", roadmap4_bullet3: "Intelligent Volunteer Matching",
+            roadmap_cta_text: "Excited about what's to come? Join our waitlist to be part of the journey.",
+            mission_title: "From Omaha, For Omaha.", mission_subtitle: "We're not a faceless corporation. We're your neighbors, building something we believe our city deserves.",
+            mission_why_title: "The \"Why\"", mission_why_text: "The Counter Collective started over coffee in the Old Market. We saw the passion and dedication of local organizers, but also the struggle: outdated software, scattered spreadsheets, and too much time spent on admin instead of the mission. We analyzed the market and saw a clear gap for a 'logistics-first' platform designed for the operational realities of community work, not just fundraising.",
+            mission_philosophy_title: "Our Philosophy: Radical Simplicity", mission_philosophy_text: "Our core user is a non-technical, time-starved community leader. That's why ease of use is our most important feature. We believe powerful software can and should be intuitive. Every screen, button, and workflow is designed to reduce complexity and give you back time, so you can focus on what matters most.",
+            mission_commitment_title: "Our Commitment: Win Omaha First", mission_commitment_text: "Our go-to-market strategy is hyper-focused on our home. We are committed to building deep relationships with local partners like the Nonprofit Association of the Midlands and the Omaha Community Foundation. By cultivating a cohort of local \"Founding Members,\" we can build a powerful base of trust, credibility, and success stories before expanding further. This isn't just a business plan; it's our commitment to our community.",
+            blog_title: "Resources & Insights", blog_subtitle: "Actionable advice and stories from the front lines of community work. We're building a library of resources to help you succeed.",
+            blog1_title: "Case Study: A Day in the Life of a Food Pantry", blog1_text: "A deep dive into the operational realities of logistics-heavy organizations, from intake and compliance to managing spoilage.", blog_read_more: "Read More →",
+            blog2_title: "How to Escape the Technology Trap", blog2_text: "Is your collection of \"helpful\" free tools actually creating more work? A guide to overcoming technology overload.",
+            blog3_title: "5 Ways to Reduce Volunteer Burnout", blog3_text: "Your volunteers are your most valuable asset. Learn how to fight the \"Do-It-All Dilemma\" and keep them engaged.",
+            partners_title: "Let's Work Together", partners_subtitle: "We're seeking passionate partners to help us build the future of community operations in Omaha and beyond.",
+            partners_founding_title: "Become a Founding Member", partners_founding_text: "We're offering the full Counter Collective platform **free, for life,** to the first 15 Omaha-based grassroots organizations that sign on. Help us build the perfect tool for your needs and get a powerful platform at no cost.", partners_founding_cta: "Apply to be a Founding Member",
+            partners_associations_title: "For Nonprofit Associations & Foundations", partners_associations_text: "Offer a modern, valuable tool to your members and grantees. We can provide workshops, co-branded resources, and special access to help your network thrive.",
+            partners_corporate_title: "For Corporate Partners", partners_corporate_text: "Streamline your corporate volunteer programs. Our future partnership portals will make it easy to manage your team's engagement with local causes.",
+            footer_title: "Questions? Ideas? Let's Talk.", footer_text: "We're building this for you. If you have a question, an idea, or just want to say hello, we'd love to hear from you.", footer_cta: "Contact Us",
+            footer_copyright: "© 2025 The Counter Collective. Made with ❤️ in Omaha, Nebraska.",
+            acc_title: "Accessibility", acc_contrast: "High Contrast"
+        },
+        es: {
+            brand_name: "El Colectivo Contador",
+            nav_home: "Inicio", nav_features: "Funciones", nav_roadmap: "Hoja de Ruta", nav_mission: "Nuestra Misión", nav_blog: "Blog", nav_partners: "Socios", nav_waitlist_button: "Unirse a la Lista",
+            hero_title: "Imagina el Impacto,", hero_title_gradient: "Sin Esfuerzo.", hero_subtitle: "El centro de operaciones moderno para las organizaciones sin fines de lucro y grupos comunitarios de Omaha. Deja de hacer malabares con hojas de cálculo y comienza a amplificar tu misión.", hero_cta: "Únete a la Lista de Acceso Anticipado",
+            problem_title: "Construido para el Ajetreo de los Líderes Comunitarios", problem_subtitle: "Lo entendemos. Eres apasionado, dedicado y llevas demasiados sombreros. Tus herramientas no deberían aumentar el caos.",
+            problem_tab1: "El Dilema de \"Hacer de Todo\"", problem_tab2: "La Trampa Tecnológica",
+            dilemma_title: "Sobrecarga Operacional", dilemma_text: "Los líderes de organizaciones pequeñas están al límite, lo que lleva al agotamiento. Nuestro objetivo principal es devolverte tiempo, tu recurso más preciado.",
+            dilemma_box_title: "¿Te Suena Familiar?", dilemma_pain1: "No hay suficiente personal para el trabajo", dilemma_pain2: "Oficina administrativa ineficiente", dilemma_pain3: "Límites constantes de tiempo y dinero",
+            trap_title: "La Trampa Tecnológica", trap_text: "Un mosaico de herramientas gratuitas crea una \"sobrecarga tecnológica\" y silos de datos, forzando el trabajo manual. La solución prevista se convierte en parte del problema.",
+            trap_box_title: "El Efecto de la Fragmentación:", trap_pain1: "Las listas de voluntarios no se comunican con las de donantes.", trap_pain2: "Los silos de datos requieren reingreso manual.", trap_pain3: "Abrumador para usuarios no técnicos.",
+            gap_title: "Una Clara Brecha en el Mercado", gap_subtitle: "Las herramientas existentes no fueron creadas para organizaciones que *hacen* cosas. Fueron creadas para recaudar fondos. Estamos cambiando eso.",
+            gap_chart_intro: "Interactúa con el gráfico para ver cómo se comparan los competidores.", gap_btn_all: "Todos los Competidores", gap_btn_crm: "Nivel 1: CRMs", gap_btn_volunteer: "Nivel 2: Voluntarios", gap_btn_niche: "Nivel 3: Nicho",
+            gap_analysis_title: "La Oportunidad \"Logística Primero\"", gap_analysis_text: "Ninguna plataforma unifica eficazmente la logística, la gestión de voluntarios y la recaudación de fondos simple. Los CRM están hechos para recaudar fondos, no para operaciones. Las herramientas especializadas perpetúan los silos de datos. Esto crea la apertura estratégica para una plataforma construida con las operaciones en su núcleo.",
+            waitlist_title: "Obtén Acceso Anticipado y Ayúdanos a Crearlo para Ti", waitlist_subtitle: "Sé el primero en saber cuándo lanzamos. Tus comentarios darán forma al futuro de nuestra plataforma.",
+            waitlist_form_prompt: "¿Qué herramientas te ayudarían más?",
+            waitlist_card1_title: "Centro de Voluntarios", waitlist_card1_text: "Programación y Comms",
+            waitlist_card2_title: "Recaudación", waitlist_card2_text: "Campañas y Donaciones",
+            waitlist_card3_title: "Operaciones", waitlist_card3_text: "Inventario y Eventos",
+            form_name: "Nombre Completo", form_email: "Correo Electrónico", form_submit_button: "Unirse a la Lista",
+            success_title: "¡Gracias! Estás en la lista.", success_text: "Estamos encantados de tenerte. Tus comentarios son vitales y estamos ansiosos por compartir nuestro progreso contigo pronto.",
+            features_title: "Un Centro, Control Total.", features_subtitle: "Nos encargamos de la complejidad para que puedas concentrarte en tu comunidad. Cada función está diseñada pensando en las necesidades específicas de las organizaciones locales.",
+            feature1_title: "Centro de Comando de Voluntarios", feature1_text: "Escapa del dolor de cabeza de las hojas de cálculo y las llamadas. Crea horarios de eventos, define roles y permite que los voluntarios se inscriban en turnos ellos mismos. Envía recordatorios específicos y registra las horas automáticamente.",
+            feature1_bullet1: "Horarios Públicos Simples", feature1_bullet2: "Base de Datos de Voluntarios con Habilidades", feature1_bullet3: "Recordatorios y Comunicación Automatizados",
+            feature2_title: "Centro de Logística y Operaciones", feature2_text: "Gestiona más que solo el inventario. Rastrea activos físicos, planifica eventos comunitarios y supervisa la entrega de programas desde un único panel. Sé lo que tienes, dónde está y adónde debe ir.",
+            feature2_bullet1: "Seguimiento de Inventario y Activos con Alertas", feature2_bullet2: "Gestión de Eventos (Entradas y Check-in)", feature2_bullet3: "Gestión de Programas (Seguimiento de Clientes)",
+            feature3_title: "CRM de Recaudación y Simpatizantes", feature3_text: "Lanza hermosas campañas en minutos. Nuestras sencillas herramientas te ayudan a aceptar donaciones, seguir el progreso y comprender a tus seguidores a un nivel más profundo al unificar su actividad voluntaria y de donación.",
+            feature3_bullet1: "Formularios de Donación Integrables", feature3_bullet2: "Paneles de Campaña en Tiempo Real", feature3_bullet3: "Vista Integrada de 360 Grados del Simpatizante",
+            roadmap_title: "Nuestra Visión para el Futuro", roadmap_subtitle: "Apenas estamos comenzando. Nuestra hoja de ruta está diseñada para crecer contigo, brindando más poder y conocimiento en cada etapa.",
+            roadmap1_title: "Ahora: La Fundación", roadmap1_text: "Resolviendo primero tus desafíos diarios más urgentes. Nuestra plataforma inicial proporciona las herramientas esenciales e integradas para gestionar tus operaciones principales sin el caos.",
+            roadmap1_bullet1: "Gestión Unificada de Voluntarios e Inventario", roadmap1_bullet2: "Formularios de Donación Simples e Integrables", roadmap1_bullet3: "Base de Datos Integrada de Simpatizantes y Voluntarios",
+            roadmap2_title: "Próximo: Perspectivas Más Profundas", roadmap2_text: "Pasando de solo gestionar tu trabajo a medir y demostrar tu impacto. Estas herramientas están diseñadas para ayudarte a contar tu historia a los financiadores y a la comunidad.",
+            roadmap2_bullet1: "Informes Avanzados y Paneles Personalizados", roadmap2_bullet2: "Seguimiento de Solicitudes y Plazos de Subvenciones", roadmap2_bullet3: "Registro Seguro de Clientes y Servicios",
+            roadmap3_title: "Futuro: Un Ecosistema Conectado", roadmap3_text: "Conectando tu misión con las herramientas que ya usas y la comunidad a la que sirves, dondequiera que estén.",
+            roadmap3_bullet1: "Integraciones con QuickBooks, Mailchimp, etc.", roadmap3_bullet2: "Aplicación Móvil Dedicada para iOS y Android", roadmap3_bullet3: "Portales de Asociación Comunitaria y Corporativa",
+            roadmap4_title: "El Horizonte: Poder Predictivo", roadmap4_text: "Aprovechando tus datos para proporcionar un valor sin precedentes. Nuestro objetivo es ofrecer sugerencias inteligentes para ayudarte a anticipar las necesidades antes de que surjan.",
+            roadmap4_bullet1: "Pronóstico Predictivo de Inventario y Donaciones", roadmap4_bullet2: "Generación Automatizada de Informes de Subvenciones", roadmap4_bullet3: "Emparejamiento Inteligente de Voluntarios",
+            roadmap_cta_text: "¿Emocionado por lo que está por venir? Únete a nuestra lista de espera para ser parte del viaje.",
+            mission_title: "De Omaha, Para Omaha.", mission_subtitle: "No somos una corporación sin rostro. Somos tus vecinos, construyendo algo que creemos que nuestra ciudad merece.",
+            mission_why_title: "El \"Porqué\"", mission_why_text: "El Colectivo Contador comenzó con un café en el Old Market. Vimos la pasión y dedicación de los organizadores locales, pero también la lucha: software obsoleto, hojas de cálculo dispersas y demasiado tiempo dedicado a tareas administrativas en lugar de la misión. Analizamos el mercado y vimos una clara brecha para una plataforma de 'logística primero' diseñada para las realidades operativas del trabajo comunitario, no solo para la recaudación de fondos.",
+            mission_philosophy_title: "Nuestra Filosofía: Simplicidad Radical", mission_philosophy_text: "Nuestro usuario principal es un líder comunitario no técnico y con poco tiempo. Es por eso que la facilidad de uso es nuestra característica más importante. Creemos que un software potente puede y debe ser intuitivo. Cada pantalla, botón y flujo de trabajo está diseñado para reducir la complejidad y devolverte tiempo, para que puedas concentrarte en lo que más importa.",
+            mission_commitment_title: "Nuestro Compromiso: Ganar Omaha Primero", mission_commitment_text: "Nuestra estrategia de salida al mercado está hiperenfocada en nuestro hogar. Estamos comprometidos a construir relaciones profundas con socios locales. Al cultivar una cohorte de \"Miembros Fundadores\" locales, podemos construir una poderosa base de confianza, credibilidad e historias de éxito antes de expandirnos más. Esto no es solo un plan de negocios; es nuestro compromiso con nuestra comunidad.",
+            blog_title: "Recursos e Ideas", blog_subtitle: "Consejos prácticos e historias desde la primera línea del trabajo comunitario. Estamos construyendo una biblioteca de recursos para ayudarte a tener éxito.",
+            blog1_title: "Estudio de Caso: Un Día en un Banco de Alimentos", blog1_text: "Un análisis profundo de las realidades operativas de las organizaciones con mucha logística, desde la recepción y el cumplimiento hasta la gestión del deterioro.", blog_read_more: "Leer Más →",
+            blog2_title: "Cómo Escapar de la Trampa Tecnológica", blog2_text: "¿Tu colección de herramientas gratuitas \"útiles\" realmente está creando más trabajo? Una guía para superar la sobrecarga tecnológica.",
+            blog3_title: "5 Maneras de Reducir el Agotamiento de Voluntarios", blog3_text: "Tus voluntarios son tu activo más valioso. Aprende a combatir el \"Dilema de Hacerlo Todo\" y mantenlos comprometidos.",
+            partners_title: "Trabajemos Juntos", partners_subtitle: "Buscamos socios apasionados que nos ayuden a construir el futuro de las operaciones comunitarias en Omaha y más allá.",
+            partners_founding_title: "Conviértete en Miembro Fundador", partners_founding_text: "Ofrecemos la plataforma completa de Counter Collective **gratis, de por vida,** a las primeras 15 organizaciones de base de Omaha que se unan. Ayúdanos a construir la herramienta perfecta para tus necesidades y obtén una plataforma potente sin costo.", partners_founding_cta: "Postula para ser Miembro Fundador",
+            partners_associations_title: "Para Asociaciones y Fundaciones", partners_associations_text: "Ofrece una herramienta moderna y valiosa a tus miembros y beneficiarios. Podemos proporcionar talleres, recursos de marca compartida y acceso especial para ayudar a que tu red prospere.",
+            partners_corporate_title: "Para Socios Corporativos", partners_corporate_text: "Optimiza tus programas de voluntariado corporativo. Nuestros futuros portales de socios facilitarán la gestión del compromiso de tu equipo con las causas locales.",
+            footer_title: "¿Preguntas? ¿Ideas? Hablemos.", footer_text: "Estamos construyendo esto para ti. Si tienes una pregunta, una idea o simplemente quieres saludar, nos encantaría saber de ti.", footer_cta: "Contáctanos",
+            footer_copyright: "© 2025 El Colectivo Contador. Hecho con ❤️ en Omaha, Nebraska.",
+            acc_title: "Accesibilidad", acc_contrast: "Alto Contraste"
+        }
+    };
+
+    // --- NAVIGATION LOGIC ---
     const showPage = (pageId) => {
         pages.forEach(page => page.classList.toggle('active', page.id === pageId));
         navLinks.forEach(link => link.classList.toggle('active', link.hash === `#${pageId}`));
         window.scrollTo(0, 0);
     };
 
-    navTriggers.forEach(trigger => {
-        trigger.addEventListener('click', (e) => {
-            const href = trigger.getAttribute('href');
-            if (href.startsWith('#') && document.getElementById(href.substring(1))) {
-                e.preventDefault();
-                const pageId = href.substring(1);
-                // If it's a link to a section on the home page, go to home first
-                if (['problem', 'gap', 'waitlist'].includes(pageId)) {
-                    showPage('home');
-                    setTimeout(() => document.getElementById(pageId)?.scrollIntoView(), 50);
-                } else {
-                    showPage(pageId);
-                }
-                history.pushState({page: pageId}, null, `#${pageId}`);
+    const handleNav = (e) => {
+        const href = e.currentTarget.getAttribute('href');
+        if (href.startsWith('#') && document.getElementById(href.substring(1))) {
+            e.preventDefault();
+            const pageId = href.substring(1);
+            if (['problem', 'gap', 'waitlist'].includes(pageId)) {
+                showPage('home');
+                setTimeout(() => document.getElementById(pageId)?.scrollIntoView({ behavior: 'smooth' }), 50);
+            } else {
+                showPage(pageId);
             }
-        });
-    });
+            history.pushState({page: pageId}, null, `#${pageId}`);
+            if (mobileMenu.style.visibility === 'visible') {
+                toggleMobileMenu();
+            }
+        }
+    };
+    navTriggers.forEach(trigger => trigger.addEventListener('click', handleNav));
     
     window.onpopstate = (event) => {
         const pageId = event.state?.page || location.hash.substring(1) || 'home';
@@ -438,16 +682,20 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     const initialPageId = location.hash.substring(1) || 'home';
-    if(document.getElementById(initialPageId)) {
-        showPage(initialPageId);
-    } else {
-        showPage('home');
-    }
+    if(document.getElementById(initialPageId)) showPage(initialPageId);
+    else showPage('home');
 
+    // --- MOBILE MENU ---
+    const toggleMobileMenu = () => {
+        const isOpen = mobileMenu.style.visibility === 'visible';
+        mobileMenu.style.visibility = isOpen ? 'hidden' : 'visible';
+        mobileMenu.style.opacity = isOpen ? '0' : '1';
+    };
+    hamburgerBtn.addEventListener('click', toggleMobileMenu);
 
+    // --- PAIN TABS ---
     const painTabs = document.querySelectorAll('.pain-tab');
     const painContents = document.querySelectorAll('.pain-tab-content');
-
     painTabs.forEach(tab => {
         tab.addEventListener('click', () => {
             const target = tab.getAttribute('data-tab');
@@ -463,6 +711,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    // --- CHART LOGIC ---
     const competitorData = {
         labels: ['Inventory & Asset Tracking', 'Core Volunteer Management', 'Basic Fundraising Tools', 'Ease of Use (Non-Tech)'],
         datasets: [
@@ -474,19 +723,36 @@ document.addEventListener('DOMContentLoaded', function () {
     };
     
     const analysisText = {
-        all: { title: "The 'Logistics-First' Opportunity", text: "No single platform effectively unifies logistics, volunteer management, and simple fundraising. CRMs are built for fundraising, not operations. Specialized tools perpetuate data silos. This creates the strategic opening for a platform built with operations at its core." },
-        crm: { title: "Weakness of All-in-One CRMs", text: "These powerful platforms are fundamentally fundraising-centric. Their weakness for our target user is a mismatch of focus, complexity, and cost. Operational logistics are not native and require complex, expensive bolt-ons." },
-        volunteer: { title: "Weakness of Volunteer Specialists", text: "These tools excel at managing people, but their focus is their limitation. They don't manage the 'stuff'—inventory, physical assets, etc. This forces organizations back into using multiple, siloed systems." },
-        niche: { title: "Weakness of Niche Tools", text: "While perfectly tailored for specific problems like food pantry inventory, these tools are often too niche. They typically have limited or non-existent features for volunteer management or fundraising." }
+        en: {
+            all: { title: "The \"Logistics-First\" Opportunity", text: "No single platform effectively unifies logistics, volunteer management, and simple fundraising. CRMs are built for fundraising, not operations. Specialized tools perpetuate data silos. This creates the strategic opening for a platform built with operations at its core." },
+            crm: { title: "Weakness of All-in-One CRMs", text: "These powerful platforms are fundamentally fundraising-centric. Their weakness for our target user is a mismatch of focus, complexity, and cost. Operational logistics are not native and require complex, expensive bolt-ons." },
+            volunteer: { title: "Weakness of Volunteer Specialists", text: "These tools excel at managing people, but their focus is their limitation. They don't manage the 'stuff'—inventory, physical assets, etc. This forces organizations back into using multiple, siloed systems." },
+            niche: { title: "Weakness of Niche Tools", text: "While perfectly tailored for specific problems like food pantry inventory, these tools are often too niche. They typically have limited or non-existent features for volunteer management or fundraising." }
+        },
+        es: {
+            all: { title: "La Oportunidad \"Logística Primero\"", text: "Ninguna plataforma unifica eficazmente la logística, la gestión de voluntarios y la recaudación de fondos simple. Los CRM están hechos para recaudar fondos, no para operaciones. Las herramientas especializadas perpetúan los silos de datos. Esto crea la apertura estratégica para una plataforma construida con las operaciones en su núcleo." },
+            crm: { title: "Debilidad de los CRM Todo en Uno", text: "Estas potentes plataformas están fundamentalmente centradas en la recaudación de fondos. Su debilidad para nuestro usuario objetivo es una falta de coincidencia de enfoque, complejidad y costo. La logística operativa no es nativa y requiere complementos complejos y costosos." },
+            volunteer: { title: "Debilidad de los Especialistas en Voluntarios", text: "Estas herramientas sobresalen en la gestión de personas, pero su enfoque es su limitación. No gestionan las 'cosas' (inventario, activos físicos, etc.). Esto obliga a las organizaciones a volver a utilizar múltiples sistemas aislados." },
+            niche: { title: "Debilidad de las Herramientas de Nicho", text: "Aunque están perfectamente diseñadas para problemas específicos como el inventario de despensas de alimentos, estas herramientas suelen ser demasiado de nicho. Por lo general, tienen características limitadas o inexistentes para la gestión de voluntarios o la recaudación de fondos." }
+        }
     };
     
     const createChart = () => {
         const chartElement = document.getElementById('competitorChart');
         if (!chartElement) return;
         const isDark = document.documentElement.classList.contains('dark');
-        const gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
-        const tickColor = isDark ? '#A0AEC0' : '#4A5568';
-        const labelColor = isDark ? '#EDF2F7' : '#1A202C';
+        const isHighContrast = document.documentElement.classList.contains('high-contrast');
+        
+        let gridColor, tickColor, labelColor;
+        if (isHighContrast) {
+            gridColor = 'rgba(255, 255, 0, 0.5)';
+            tickColor = '#ffff00';
+            labelColor = '#ffffff';
+        } else {
+            gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+            tickColor = isDark ? '#A0AEC0' : '#4A5568';
+            labelColor = isDark ? '#EDF2F7' : '#1A202C';
+        }
 
         const ctx = chartElement.getContext('2d');
         if (competitorChart) competitorChart.destroy();
@@ -535,8 +801,9 @@ document.addEventListener('DOMContentLoaded', function () {
             void analysisContainer.offsetWidth;
             analysisContainer.classList.add('fade-in');
 
-            analysisTitleEl.textContent = analysisText[tier].title;
-            analysisTextEl.textContent = analysisText[tier].text;
+            const currentLang = document.documentElement.lang || 'en';
+            analysisTitleEl.textContent = analysisText[currentLang][tier].title;
+            analysisTextEl.textContent = analysisText[currentLang][tier].text;
         });
     });
 
@@ -567,33 +834,82 @@ document.addEventListener('DOMContentLoaded', function () {
         successMessage.classList.remove('hidden');
     });
 
+    // --- ACCESSIBILITY & THEME LOGIC ---
     const themeToggleBtn = document.getElementById('theme-toggle');
     const sunIcon = document.getElementById('theme-icon-sun');
     const moonIcon = document.getElementById('theme-icon-moon');
+    const highContrastToggle = document.getElementById('high-contrast-toggle');
+    const languageToggle = document.getElementById('language-toggle');
+    const accessibilityToggle = document.getElementById('accessibility-toggle');
+    const accessibilityDropdown = document.getElementById('accessibility-dropdown');
 
-    const applyTheme = (isDark) => {
-        document.documentElement.classList.toggle('dark', isDark);
-        if(sunIcon && moonIcon){
-            sunIcon.classList.toggle('hidden', isDark);
-            moonIcon.classList.toggle('hidden', !isDark);
-        }
+    const applyTheme = (theme) => {
+        document.documentElement.classList.remove('dark', 'high-contrast');
+        if (theme === 'dark') document.documentElement.classList.add('dark');
+        if (theme === 'high-contrast') document.documentElement.classList.add('high-contrast');
+        
+        sunIcon.classList.toggle('hidden', theme === 'dark');
+        moonIcon.classList.toggle('hidden', theme !== 'dark');
+        highContrastToggle.checked = theme === 'high-contrast';
         createChart();
     };
 
-    if(themeToggleBtn){
-        themeToggleBtn.addEventListener('click', () => {
-            const isDark = !document.documentElement.classList.contains('dark');
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-            applyTheme(isDark);
+    const applyLanguage = (lang) => {
+        document.documentElement.lang = lang;
+        document.querySelectorAll('[data-translate-key]').forEach(el => {
+            const key = el.dataset.translateKey;
+            if (translations[lang] && translations[lang][key]) {
+                if (key === 'hero_title') {
+                    el.childNodes[0].nodeValue = translations[lang][key];
+                } else if (key === 'hero_title_gradient') {
+                    el.innerText = translations[lang][key];
+                } else {
+                    el.innerText = translations[lang][key];
+                }
+            }
         });
-    }
+        languageToggle.innerText = lang === 'es' ? 'English' : 'Español';
+    };
 
+    themeToggleBtn.addEventListener('click', () => {
+        const currentTheme = localStorage.getItem('theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        localStorage.setItem('theme', newTheme);
+        applyTheme(newTheme);
+    });
+
+    highContrastToggle.addEventListener('change', (e) => {
+        const newTheme = e.target.checked ? 'high-contrast' : 'light';
+        localStorage.setItem('theme', newTheme);
+        applyTheme(newTheme);
+    });
+
+    languageToggle.addEventListener('click', () => {
+        const newLang = document.documentElement.lang === 'es' ? 'en' : 'es';
+        localStorage.setItem('language', newLang);
+        applyLanguage(newLang);
+    });
+    
+    accessibilityToggle.addEventListener('click', () => {
+        accessibilityDropdown.classList.toggle('hidden');
+    });
+    
+    document.addEventListener('click', (e) => {
+        if (!document.getElementById('accessibility-menu-container').contains(e.target)) {
+            accessibilityDropdown.classList.add('hidden');
+        }
+    });
+
+    // Initial Load
     const savedTheme = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    applyTheme(savedTheme ? savedTheme === 'dark' : prefersDark);
+    applyTheme(savedTheme || (prefersDark ? 'dark' : 'light'));
+
+    const savedLang = localStorage.getItem('language') || 'en';
+    applyLanguage(savedLang);
+
 });
 </script>
 
 </body>
 </html>
-
